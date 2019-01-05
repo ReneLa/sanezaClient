@@ -39,7 +39,9 @@ import Button from '../components/buttons/Button'
 
          getAllServicesByLocationIdAndCatId(410,1)
 
-         navigation.navigate('SearchResults') 
+         navigation.navigate('SearchResults',{
+             title:'Search Results'
+         }) 
         
     }
 
@@ -47,7 +49,9 @@ import Button from '../components/buttons/Button'
         const {searchText,getBranchByShopName,navigation}=this.props
 
         getBranchByShopName(searchText)
-        navigation.navigate('SearchResults')
+        navigation.navigate('SearchResults',{
+            title:'Search Results'
+        })
     }
 
     renderSearchFields(){
@@ -62,7 +66,7 @@ import Button from '../components/buttons/Button'
                   textColor={colors.white}
                    handlePress={this.getShopsSearch}
                   customStyle={{
-                      backgroundColor:colors.blue01,
+                      backgroundColor:colors.primary,
                       width:250,
                       height:60,
                       marginTop:20,
@@ -157,7 +161,7 @@ const styles =StyleSheet.create({
     headerContainerStyle:{
         display:'flex',
         flexDirection:'row',
-        backgroundColor:colors.white,
+        backgroundColor:colors.primary,
         paddingTop:Platform.OS === 'ios' ? 20: 15,
         height:Platform.OS === 'ios' ? 70: 90,
     },
@@ -171,7 +175,7 @@ const styles =StyleSheet.create({
         flexDirection:'row',
         borderWidth:0.5,
         borderColor:colors.gray,
-        backgroundColor:colors.gray,
+        backgroundColor:colors.white,
         borderRadius:2
     },
     searchIconStyle:{

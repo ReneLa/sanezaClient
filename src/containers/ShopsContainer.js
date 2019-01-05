@@ -4,6 +4,7 @@ import { View,StyleSheet,ScrollView,Platform} from 'react-native';
 import {connect} from "react-redux";
 import {getAllShops} from "../redux/actions"
 import ShopList from '../components/home/ShopLists';
+import colors from '../styles/colors';
 
 class ShopsContainer extends React.Component{
     constructor(props){
@@ -43,9 +44,15 @@ class ShopsContainer extends React.Component{
 
 
 const styles=StyleSheet.create({
+    wrapperStyle:{
+        display:'flex',
+        flex:1,
+        backgroundColor:colors.gray03,
+    },
     scrollView:{
         display:'flex',
         flex:1,
+        backgroundColor:colors.gray,
         paddingTop:Platform.OS === 'ios' ? 10 : 6,
         paddingBottom:Platform.OS === 'ios' ? 40 : 30
     },

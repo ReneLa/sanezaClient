@@ -1,6 +1,6 @@
 import React from 'react'
 import {FontAwesome,MaterialIcons}from '@expo/vector-icons'
-import {View,StyleSheet,Text,Platform} from 'react-native'
+import {View,StyleSheet,Text,Platform,TouchableOpacity} from 'react-native'
 import colors from '../../styles/colors'
 import IconButton from '../../components/buttons/IconButton'
 import Item from '../orders/Item'
@@ -10,7 +10,7 @@ const AppointCard = ({name,location,handlePress,total,listing})=>{
            nameWrapperStyle,nameStyle,actionButtonsStyle,totalTextStyle}=styles
           
     return(
-        <View style={wrapperStyle}>
+        <TouchableOpacity style={wrapperStyle}>
            <View style={cardActionsWrapper}>
               <View style={nameWrapperStyle}>
                   <Text style={nameStyle}>{name}</Text>
@@ -40,10 +40,10 @@ const AppointCard = ({name,location,handlePress,total,listing})=>{
                {listing.map((list,i) =>{
                    return(
                        <Item 
-                             key={list.branchId}
+                             key={i}
                              number={i+1} 
                              name={list.serviceName}
-                             date={list.time}
+                             date={list.time.toDateString()}
                              price={list.price}
                          />
                    )
@@ -53,7 +53,7 @@ const AppointCard = ({name,location,handlePress,total,listing})=>{
                  <Text style={totalTextStyle}>Total:</Text>
                  <Text style={totalTextStyle}>{total+ ' Rwf'}</Text>
            </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -63,9 +63,10 @@ const styles = StyleSheet.create({
     wrapperStyle:{
         display:'flex',
         flex:1,
+        borderRadius:6,
         backgroundColor:colors.white,
-        borderWidth:Platform.OS === 'ios' ? 0.7 : 0.4,
-        borderColor:colors.gray,
+        // borderWidth:Platform.OS === 'ios' ? 0.7 : 0.4,
+        // borderColor:colors.gray,
         // height:Platform.OS === 'ios' ? 250: 250,
         marginTop:Platform.OS === 'ios' ? 7.5 : 5.5,
         marginBottom:Platform.OS === 'ios' ? 7.5 :5.5

@@ -6,6 +6,10 @@ import {connect} from 'react-redux'
 import {addToCart,refresh} from '../../redux/actions'
 import colors from '../../styles/colors'
 import Calendar from '../Calendar';
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
+
 const image1= require('../../images/salon1.jpg')
 
 class ServiceCard extends React.Component{
@@ -13,38 +17,36 @@ class ServiceCard extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            visible:false
+            show:false
         }
     }
 
     onOpen=()=>{
-        this.setState({visible:true})
+        this.setState({show:true})
     }
     onClose=()=>{
-        this.setState({visible:false})
-        
+        this.setState({show:false})       
     }
+
     render(){
-        const {modalVisible,service,
-            // date,time,
-            disabled,
-            onClose,addItem}=this.props
+        const {modalVisible,service,shop,location,dateSelected,timeSelected,
+            disabled, closeModal,addItem}=this.props
+
         const {wrapperStyle,container,cancelButton,titleWrapper,infoStyle,
               buttonStyle,labelStyle,imageWrapper,descriptionWrapper,
               headerstyle,containStyle,ValueText
         }=styles
-        
+    
         return(
             <Modal 
                animationType={'slide'}
                visible={modalVisible}
                transparent
-               onRequestClose={onClose}
              >
                 <View style={wrapperStyle}>
                   <View style={container}>
                          <TouchableOpacity 
-                           onPress={onClose}
+                           onPress={closeModal}
                            style={{
                              display:'flex',
                              alignItems:'flex-end',
@@ -79,46 +81,77 @@ class ServiceCard extends React.Component{
                                  <Text style={ValueText}>{service.duration +' minutes'}</Text>
                               </View>
                            </View>
+
+                           <View style={infoStyle}>
+                              <View  style={containStyle}>
+                                   <Text>Shop</Text>
+                                    <Text style={ValueText}>{shop}</Text>
+                              </View>
+                              <View style={containStyle}>
+                                 <Text>Location</Text>
+                                 <Text style={ValueText}>{location}</Text>
+                              </View>
+                           </View>
+                         
                          </View>
+
                          <View style={infoStyle}>
                              <View style={[{borderBottomColor:colors.black01,borderBottomWidth:1},containStyle]}>
                                  <Text>Schedule Time</Text>
-                                 {/* <Text style={ValueText}>{date}</Text>
-                                 <Text style={ValueText}>{time}</Text> */}
+                                 <Text style={ValueText}>{dateSelected}</Text>
+                                 <Text style={ValueText}>{timeSelected}</Text>
                              </View>
-                             <View style={containStyle}>
+                             <View style={[containStyle,{alignItems:'center',justifyContent:'center',paddingLeft:10,paddingRight:10}]}>
                              <TouchableOpacity
                              
-                             onPress={this.onOpen} 
+                               onPress={this.onOpen} 
                                style={{
                                    display:'flex',
                                    padding:10,
+                                   borderRadius:3,
                                    alignItems:'center',
                                    justifyContent:'center',
-                                   backgroundColor:colors.red
+                                   backgroundColor:colors.red,
+                                   
                                }}>
                               <Text style={[{color:colors.white,
-                                fontSize:Platform.OS === 'ios' ? 17:13},labelStyle]}>
+                                fontSize:hp('2.8%')},labelStyle]}>
                                     Choose Date
                                 </Text>
                
                           </TouchableOpacity> 
                              </View>
                          </View>
+                         <View style={{
+                              display:'flex',
+                              width:'100%',
+                              position:'absolute',
+                              bottom:0,
+                              left:0,
+                              shadowColor: colors.gray02,
+                              shadowOffset: { height: 3},
+                              shadowOpacity: 0.8,
+                              shadowRadius: 5,
+                              padding:10,
+                              borderTopWidth:1,
+                              alignItems:'center',
+                              justifyContent:'center',
+                              borderColor:colors.gray02
+                         }}>
                          <TouchableOpacity
                              disabled={disabled}
                              onPress={addItem} 
                                style={[{backgroundColor:disabled ? colors.gray : colors.primary },buttonStyle]}>
                               <Text style={[{color:colors.white,
-                                fontSize:Platform.OS === 'ios' ? 17:13},labelStyle]}>
-                                    Add
+                                fontSize:hp('3%')},labelStyle]}>
+                                    Book Service
                                 </Text>
                
                           </TouchableOpacity> 
-                         
+                          </View>
                       </View> 
                       <Calendar
-                         modalVisible={this.state.visible}
+                         modalVisible={this.state.show}
                          close={this.onClose}
                       />
                 </View>
@@ -129,7 +162,7 @@ class ServiceCard extends React.Component{
 
 function mapStateToProps({cart}){
    
-    const {byId,byHash,dateSelected} = cart
+    const {byId,byHash,timeSelected,dateSelected} = cart
     return{
         byId,dateSelected,byHash
     }
@@ -155,6 +188,7 @@ const styles =StyleSheet.create({
           borderRadius:5,
           borderColor:'#D6DBDF',
           width:'100%',
+          height:hp('75%'),
           backgroundColor:colors.white,
           
     },
@@ -162,10 +196,11 @@ const styles =StyleSheet.create({
        display:'flex',
        paddingLeft:40,
        paddingRight:40,
-       height:130
+       height:hp('20%')
    },
    descriptionWrapper:{
        display:'flex',
+    //    flex:0.5,
        padding:10,
 
    },
@@ -177,14 +212,14 @@ const styles =StyleSheet.create({
    },
    headerstyle:{
        color:colors.black01,
-       fontSize:22,
+       fontSize:hp('3%'),
        fontWeight:'600'
    },
    infoStyle:{
        display:'flex',
        flexDirection:'row',
-       padding:10,
-       marginBottom:12
+    //    padding:10,
+      
    },
    containStyle:{
      display:'flex',
@@ -198,18 +233,18 @@ const styles =StyleSheet.create({
     },
     buttonStyle:{
         display:'flex',
-        flex:1,
-        
+        width:wp('85%'),
         justifyContent:'center',
         alignItems:'center',
-        height:Platform.OS === 'ios' ? 50 : 40,
-        borderRadius:1,
-        width:'100%'
+        height:hp('7%'),
+        borderRadius:4,
+        padding:10,
+        
     },
     ValueText:{
         color:colors.blue01,
         fontWeight:'500',
-        fontSize:16,
+        fontSize:hp('2.5%'),
         marginTop:5
     }
 })

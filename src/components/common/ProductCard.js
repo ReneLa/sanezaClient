@@ -1,35 +1,105 @@
 import React from 'react'
-import {View,Image, Text,StyleSheet,TouchableOpacity,ImageBackground,Platform} from 'react-native'
+import {View,Image, Text,StyleSheet,TouchableOpacity,ImageBackground,AsyncStorage,Platform} from 'react-native'
 import colors from '../../styles/colors'
 import CustomCheckBox from '../forms/CustomCheckBox'
+import {connect} from 'react-redux' 
+import {addToCart,getProduct,removeFromCart} from '../../redux/actions'
+const salonImage= require('../../images/salon4.jpg')
 
-export default ShopCard =({handlePress,image,name,price,item,id})=>{
-    const {wrappeStyle,cardImageStyle,cardContent,priceStyle,nameStyle,
-        cardMeta,titleWrapper,lineBreak,priceTextStyle
-    } = styles
-    return(
-        <TouchableOpacity style={wrappeStyle} onPress={handlePress}>
-           <View style={cardImageStyle}>
-              <ImageBackground source={image} style={{width:'100%',height:'100%'}}>
-                  <CustomCheckBox id={id} item={item}
-                     customStyle={{left:-50}}
-                   />   
-              </ImageBackground>
-               
-           </View>
-           <View style={cardContent}>
-              <View style={titleWrapper}>
-                  <Text style={nameStyle}>{name}</Text>
-              </View>
-           </View>
-           <View style={lineBreak}/>
-           <View style={cardMeta}>
-                <Text style={priceTextStyle}>{"Price:"}</Text>
-                <Text style={priceStyle}>{price}</Text>
-           </View>
-        </TouchableOpacity>
-    )
+
+class ProductCard extends React.Component{
+    constructor() {
+        super();
+         this.state = {
+          checked: false,
+          visible:false,
+          client:''
+        };
+      }
+
+      componentDidMount= async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+          this.setState({client:item.clientId})
+    }
+
+      toggleState=()=>{
+        this.setState({checked:false})
+        this.handleRemoveFromCart()
+    }
+    
+
+      handleRemoveFromCart=()=>{
+        this.props.removeFromCart(this.props.id)
+        
+    }
+
+
+      handleAddToCart=()=>{
+        this.setState({checked:true})
+        const clientId=this.state.client
+        const time ='2019-10-03 00:25:00'
+        const quantity=1
+        const orderNo='HGBJKKDLSA'
+        const {id,name,branchId,price}=this.props
+        const newProduct={
+            clientId,
+            id,
+            name,
+            price,
+            time,
+            branchId,
+            quantity,
+            orderNo
+        }
+        this.props.addToCart(newProduct)
+        this.setState({visible:false})
+     }
+
+    render(){
+        const {handlePress,image,name,price,id} = this.props
+        const {wrappeStyle,cardImageStyle,cardContent,priceStyle,nameStyle,
+            cardMeta,titleWrapper,lineBreak,priceTextStyle
+        } = styles
+        
+        return(
+            <TouchableOpacity style={wrappeStyle} onPress={this.handleAddToCart}>
+               <View style={cardImageStyle}>
+                  <ImageBackground source={salonImage} style={{width:'100%',height:'100%'}}>
+                      <CustomCheckBox  
+                                   checked={this.state.checked}
+                                  toggle={this.toggleState}  
+                                  id={id} 
+                         customStyle={{display:this.state.checked ? 'flex':'none' ,left:-50}}
+                       />   
+                  </ImageBackground>
+                   
+               </View>
+               <View style={cardContent}>
+                  <View style={titleWrapper}>
+                      <Text style={nameStyle}>{name}</Text>
+                  </View>
+               </View>
+               <View style={lineBreak}/>
+               <View style={cardMeta}>
+                    <Text style={priceTextStyle}>{"Price:"}</Text>
+                    <Text style={priceStyle}>{price+" Rwf"}</Text>
+               </View>
+            </TouchableOpacity>
+        )
+    }
 }
+
+function mapStateToProps({shop}){
+    const {product} = shop
+    
+    return {
+        product
+    }
+}
+
+
+export default connect(mapStateToProps,{getProduct,addToCart,removeFromCart})(ProductCard)
 
 const styles=StyleSheet.create({
     wrappeStyle:{

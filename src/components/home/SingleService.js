@@ -1,11 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getService,addToCart,removeFromCart,refresh} from '../../redux/actions'
-import {View, Text, StyleSheet,TouchableOpacity,Platform} from 'react-native'
+import {View, Text, StyleSheet,TouchableOpacity,Platform,AsyncStorage} from 'react-native'
 import colors from '../../styles/colors'
 import CustomCheckBox from '../forms/CustomCheckBox'
 import ServiceCard from '../common/ServiceCard'
 import {Entypo} from '@expo/vector-icons';
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 class SingleService extends React.Component{
 
@@ -13,20 +16,26 @@ class SingleService extends React.Component{
         super();
          this.state = {
           checked: false,
-          visible:false
+          visible:false,
+          client:''
         };
       }
+
+      componentDidMount=async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+          this.setState({client:item.clientId})
+        
+        }
 
       toggleState=()=>{
           this.setState({checked:false})
           this.handleRemoveFromCart()
       }
-     close=()=>{
-        this.setState({visible:false})
-     }
+    
      onCloseModal=()=>{
+
         this.setState({checked:false, visible:false})
-        this.props.refresh({prop:'service'})
     }
 
     onFetchService=()=>{
@@ -42,9 +51,11 @@ class SingleService extends React.Component{
     handleAddToCart=()=>{
         const {service}=this.props
         const newItem={
+            clientId:this.state.client,
             id:service.serviceId,
             name:service.serviceName,
-            time:this.props.dateSelected,
+            date:this.props.dateSelected,
+            time:this.props.timeSelected,
             price:service.price,
             branchId:this.props.branchId
   
@@ -58,10 +69,8 @@ class SingleService extends React.Component{
        
         const {wrapperStyle,nameWrapper,priceWrapper,nameText}=styles
 
-        const {image,id,item,name,duration,price,dateSelected, handlePress}=this.props
-    //    const date=dateSelected === null ? '' : dateSelected.toDateString()
-    //     const time=dateSelected === null ? '' : dateSelected.toTimeString()
-    //     const disabled = dateSelected === null ? true : false
+        const {image,id,item,name,duration,price,dateSelected, handlePress,shopName,shopLocation}=this.props
+    
         return(
             <TouchableOpacity style={[wrapperStyle]}
                onPress={this.onFetchService}
@@ -94,11 +103,11 @@ class SingleService extends React.Component{
                 <ServiceCard
                       modalVisible={this.state.visible}
                       service={this.props.service}
-                      onClose={this.onCloseModal}
+                      closeModal={this.onCloseModal}
+                      shop={shopName}
+                      location={shopLocation}
                       close={this.close}
-                    //   date={date}
                       disabled={false}
-                    //   time={time}
                       addItem={this.handleAddToCart}
                 />
                 </TouchableOpacity>
@@ -109,9 +118,9 @@ class SingleService extends React.Component{
 
 function mapStateToProps({shop,cart}){
     const {service} = shop
-    const {dateSelected}=cart
+    const {dateSelected,timeSelected}=cart
     return {
-        service,dateSelected
+        service,dateSelected,timeSelected
     }
 }
 
@@ -129,8 +138,9 @@ const styles = StyleSheet.create({
         borderWidth:0.5,
         marginTop:5,
         marginBottom:5,
+        borderRadius:5,
         // padding:10,
-        height:Platform.OS === 'ios' ? 70 :55
+        height:hp('10%')
     },
   
    
@@ -141,14 +151,14 @@ const styles = StyleSheet.create({
         flex:2
     },
     nameText:{
-        fontSize:Platform.OS === 'ios' ? 18 : 15,
+        fontSize:hp('2.5%'),
         fontWeight:Platform.OS === 'ios' ?'400' : '300',
-        color:"#000"
+        color:colors.black01
     },
     locationText:{
-        fontSize:Platform.OS === 'ios' ? 16 :14,
+        fontSize:hp('2%'),
         fontWeight:Platform.OS === 'ios' ?'300':'200',
-        color:"#000"
+        color:colors.black01
     },
     priceWrapper:{
         display:'flex',

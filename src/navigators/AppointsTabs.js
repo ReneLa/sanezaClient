@@ -10,8 +10,8 @@ import PendingAppointsScreen from '../screens/appointments/Tabs/PendingAppointsS
 
 const AppointsTabs = createMaterialTopTabNavigator ({
 
-    Bookings_Completed:{screen:CompletedAppointsScreen},
     Bookings:{screen: PendingAppointsScreen},
+    Completed:{screen:CompletedAppointsScreen},
 },
 {
     tabBarOptions: {

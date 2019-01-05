@@ -9,21 +9,11 @@ import SingleShopContainer from '../../containers/SingleShopContainer'
  export default class SingleSalon extends Component{
 
     static navigationOptions=({navigation})=>({
-        // title:"Saneza",
+        
         headerLeft:<RoundedButton customStyle={{marginLeft:5,width:45,height:45}}
                                  handlePress={()=>{navigation.goBack()}} 
                                  icon={<FontAwesome name="angle-left" 
                                              size={Platform.OS === 'ios' ? 35 : 30} color={colors.white}/>}/>,
-        // headerStyle:{
-        //     backgroundColor:colors.primary,
-        //     elevation:4,
-        //     borderBottomWidth:0,
-        //     shadowColor: colors.gray01,
-        //     shadowOffset: { height: 1},
-        //     shadowOpacity: 0.4,
-        //     shadowRadius: 5,
-
-        // },
         
         headerTitleStyle:{
             fontWeight:Platform.OS === 'ios' ? '700' : '500',
@@ -35,7 +25,7 @@ import SingleShopContainer from '../../containers/SingleShopContainer'
     })
 
     render(){
-        // console.log(this.props)s
+        
         const {navigation}= this.props
        
 

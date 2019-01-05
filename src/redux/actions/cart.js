@@ -1,4 +1,4 @@
-import {ADD,REMOVE,UPDATE,CHANGE_DATE} from './types'
+import {ADD,REMOVE,UPDATE,CHANGE_DATE, SET_TIME,REFRESH_CART} from './types'
 
 
 export const addToCart=(item)=>{
@@ -22,7 +22,11 @@ export const updateCart=(item)=>{
   }
 }
 
-
+export const refreshCart=()=>{
+  return{
+    type:REFRESH_CART
+  }
+}
 export const dateChanged=(value)=>{
     return{
         type:CHANGE_DATE,
@@ -30,13 +34,10 @@ export const dateChanged=(value)=>{
      
     }
   }
-// export const dateChanged=({prop,value})=>{
-//   return{
-//       type:CHANGE_DATE,
-//       payload:{
-//         prop,
-//         value
-//       }
-//   }
-// }
+export const setTime=(value)=>{
+  return{
+      type:SET_TIME,
+      payload:value
+  }
+}
 

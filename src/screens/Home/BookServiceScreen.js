@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {FontAwesome} from '@expo/vector-icons'
-
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
-import {getShopServices} from "../../redux/actions"
+import {getShopServices,refreshCart} from "../../redux/actions"
 import { View,StyleSheet,Platform,
     ScrollView, Text} from 'react-native';   
 import RoundedButton from '../../components/buttons/RoundedButton' 
@@ -13,8 +15,10 @@ import SingleService from'../../components/home/SingleService'
 
 class BookServiceScreen extends Component{
      
-    static navigationOptions=({navigation})=>({
-        title:"Saneza",
+    static navigationOptions=({navigation})=>{
+        const { params } = navigation.state
+        return {
+        title:params.shopName,
         headerLeft:<RoundedButton customStyle={{marginLeft:5,width:45,height:45}}
                                  handlePress={()=>{navigation.goBack()}} icon={<FontAwesome name="angle-left" size={35} color={colors.white}/>}/>,
         headerStyle:{
@@ -33,7 +37,7 @@ class BookServiceScreen extends Component{
              color:colors.white
         },
         gesturesEnables:false
-    })
+    }}
 
     constructor(props){
         super(props);
@@ -50,6 +54,7 @@ class BookServiceScreen extends Component{
     componentDidMount(){
         const {branchId} = this.props.navigation.state.params
         this.props.getShopServices(branchId);
+        this.props.refreshCart()
     }
 
       renderCategory(){
@@ -99,11 +104,15 @@ class BookServiceScreen extends Component{
 
     onBookPress(){
         const {navigate}=this.props.navigation
-        const {branchId} = this.props.navigation.state.params
-
+        const {shopName,branchId,shopLocation} = this.props.navigation.state.params
+         
          navigate('BookingDetails',{
-            branchId
+            branchId,
+            shopName,
+            shopLocation,
+            detailTitle:'Booking Details'
          })
+        //  this.setState({ch})
     }
    
    
@@ -122,14 +131,11 @@ class BookServiceScreen extends Component{
                     );
                 
             const showBottomNav = itemQty > 0 ? true : false
-            const {shopName,branchId} = this.props.navigation.state.params
+            const {shopName,branchId,shopLocation} = this.props.navigation.state.params
 
         return(
         <View style={styles.wrapper}>
          <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={styles.headerWrapper}>
-              <Text style={styles.headerText}>{shopName}</Text>
-          </View>
           
             <View>
             {this.renderCategory()}
@@ -140,16 +146,16 @@ class BookServiceScreen extends Component{
                showBottomNav={showBottomNav}
                textContainer={
                    <View style={{backgroundColor:'transparent',padding:15,alignItems:'center',justifyContent:'center'}}>
-                       <Text style={{fontSize:Platform.OS === 'ios' ? 18 : 16,color:'#fff'}}>{itemQty} servive(s) selected </Text>
-                    <Text style={{fontSize:Platform.OS === 'ios' ? 25: 20,color:'#fff',fontWeight:'bold'}} >{sum +' rwf'}</Text>
+                       <Text style={{fontSize:hp('2%'),color:'#fff'}}>{itemQty} servive(s) selected </Text>
+                    <Text style={{fontSize:hp('3.5%'), color:'#fff',fontWeight:'bold'}} >{sum +' rwf'}</Text>
                    </View>}
                buttonTwo={<Button handlePress={this.onBookPress}
                label="Book Now"
-               textSize={Platform.OS === 'ios' ? 22  : 18}
+               textSize={hp('3.5%')}
                
                textColor={colors.black01}
                customStyle={{backgroundColor:colors.gray03,borderRadius:2,display:'flex',width:'100%',flex:1}}/>}
-                   customStyle={{position:'absolute',height:Platform.OS === 'ios' ? 75 : 65 ,backgroundColor:colors.primary}}
+                   customStyle={{position:'absolute',height:hp('10%'),backgroundColor:colors.primary}}
                    />   
         </View>
         )
@@ -167,7 +173,7 @@ function mapStateToProps({shop,cart}){
     }
 }
 
-export default connect(mapStateToProps,{getShopServices})(BookServiceScreen)
+export default connect(mapStateToProps,{getShopServices,refreshCart})(BookServiceScreen)
 
 const styles =StyleSheet.create({
     
@@ -178,7 +184,7 @@ const styles =StyleSheet.create({
     },
     scrollView:{
         display:'flex',
-        
+        paddingTop:25,
         paddingRight:10,
         paddingLeft:10
     },
@@ -192,7 +198,7 @@ const styles =StyleSheet.create({
     },
      
     headerText:{
-        fontSize:Platform.OS === 'ios' ? 25 : 20,
+        fontSize:hp('3%'),
         color:colors.black02,
         fontWeight: Platform.OS === 'ios' ?'500' : '400',
         marginTop:Platform.OS === 'ios' ? 20 : 15,
@@ -203,8 +209,9 @@ const styles =StyleSheet.create({
         
     },
     categoryHeaderStyle:{
+        
+        fontSize:hp('3%'),
         color:colors.black01,
-        fontSize:Platform.OS === 'ios' ? 23:17,
         fontWeight:Platform.OS === 'ios' ? '600':'500',
         marginTop:5,
         marginBottom:5

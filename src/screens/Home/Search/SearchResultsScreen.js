@@ -1,13 +1,37 @@
 import React from 'react'
-import {Ionicons} from '@expo/vector-icons'
-import { View,StyleSheet,Platform,ScrollView,Text,ActivityIndicator } from 'react-native'
+import {FontAwesome,Ionicons} from '@expo/vector-icons'
+import { View,StyleSheet,Platform,ScrollView,Text,ActivityIndicator,ProgressViewIOS } from 'react-native'
 import colors from '../../../styles/colors'
 import {connect} from 'react-redux'
 import FlatList from '../../../components/home/FLatList'
-
+import RoundedButton from '../../../components/buttons/RoundedButton'
 
  class SearchResultsScreen extends React.Component{
-  
+
+    static navigationOptions=({navigation})=>{
+        const { title } = navigation.state.params
+        return {
+        title,
+        headerLeft:<RoundedButton customStyle={{marginLeft:5,width:45,height:45}}
+                                 handlePress={()=>{navigation.goBack()}} icon={<FontAwesome name="angle-left" size={35} color={colors.white}/>}/>,
+        headerStyle:{
+            backgroundColor:colors.primary,
+            elevation:4,
+            borderBottomWidth:0,
+            shadowColor: colors.gray01,
+            shadowOffset: { height: 2},
+            shadowOpacity: 0.4,
+            shadowRadius: 5,
+
+        },
+        headerTitleStyle:{
+            fontWeight:'500',
+            fontSize:20,
+             color:colors.white
+        },
+        gesturesEnables:false
+    }}
+
     constructor(props){
         super(props)
         this.state={
@@ -57,37 +81,56 @@ import FlatList from '../../../components/home/FLatList'
           
     //  }
 
+    renderEmpty(){
+        return(
+            <View style={{
+                display:'flex',
+                flex:1,
+                alignItems:'center',
+                justifyContent:'center'
+            }}>
+               <FontAwesome name='shopping-cart' size={50} color={colors.black02}/>
+            </View>
+        )
+    }
+
     render(){
         const {wrapperStyle ,containerStyle} = styles
         const{resultSearch}=this.props
-        
+        console.log(resultSearch)
         return(
-           <View style={wrapperStyle}>  
-              <ScrollView contentContainerStyle={containerStyle}>
-              
-                   {
-                       this.state.loadingVisible ?
+           <View  style={wrapperStyle}>  
+               {
+                  this.state.loadingVisible ?  
                        <View style={{flex:1,display:'flex',justifyContent:'center',alignItems:'center'}}>
-                             <ActivityIndicator color={colors.blue01} size={'large'}/>
-                         </View>
-                       :
-                       <View>
-                                {
-                                    resultSearch.map((result,i) => {
-                                        return(
-                                            <View style={styles.singleContainer} key={i}>
-                                                <FlatList handlePress={this.viewShop.bind(this,result.branchId)}
-                                                    title={result.shopName}
-                                                    image={result.profilePicture}
-                                                    location={result.locationName}
-                                                   />
-                                            </View>
-                                        )
-                                    })
-                                }
+                           <ActivityIndicator color={colors.blue01} size={'large'}/>
+                       </View>
+
+                          :
+                    
+                    <ScrollView contentContainerStyle={containerStyle}>
+                      {resultSearch.length===0 ? <View>{this.renderEmpty()}</View>
+                        :
+                        <View>
+                           
+                          {
+                            resultSearch.map((result,i) => {
+                                return(
+                                    <View style={styles.singleContainer} key={i}>
+                                        <FlatList handlePress={this.viewShop.bind(this,result.branchId)}
+                                            title={result.shopName}
+                                            image={result.profilePicture}
+                                            location={result.locationName}
+                                           />
+                                    </View>
+                                )
+                            })
+                          }
                         </View>
-                   }
-             </ScrollView>
+                    }
+                           
+                    </ScrollView> 
+             }
            </View>
         
         )

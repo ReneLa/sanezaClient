@@ -6,7 +6,7 @@ import {
     } from 'react-native';
 import colors from '../../styles/colors'    
 const buttonImage = require('../../images/buttonBack.jpg')
-
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const LoginButton = ({handlePress,label,customStyle,disabled})=>{
     const {buttonStyle,labelStyle,imageStyle}= styles
@@ -15,11 +15,11 @@ const LoginButton = ({handlePress,label,customStyle,disabled})=>{
                disabled={disabled}
                onPress={handlePress} 
                style={[customStyle,buttonStyle]}>
-        <ImageBackground source={buttonImage} style={imageStyle}>
+        {/* <ImageBackground source={buttonImage} style={imageStyle}> */}
            
               <Text style={labelStyle}>{label}</Text>
            
-        </ImageBackground> 
+        {/* </ImageBackground>  */}
         </TouchableOpacity>
     )
 }
@@ -40,14 +40,20 @@ const styles=StyleSheet.create({
         paddingBottom:12,
     },
     labelStyle:{
-        fontSize:Platform.OS === 'ios' ? 22 : 18,
+        fontSize:hp('2.5%'),
         fontWeight:Platform.OS === 'ios' ? '500' : '400',
-        color:colors.white,
+        color:colors.primary,
 
     },
     buttonStyle:{
         display:'flex',
-        height:Platform.OS === 'ios' ? 55 : 45
+        height: hp('7%'),
+        // height:Platform.OS === 'ios' ? 55 : 45,
+        backgroundColor:colors.white,
+        alignItems:'center',
+        justifyContent:'center',
+        paddingTop:12,
+        paddingBottom:12,
     },
 
 })

@@ -4,15 +4,17 @@ import {
          ADD_TO_APPOINTMENTS,
          REMOVE_FROM_APPOINTMENTS,
         //  CHANGE_DATE,
-
+        //create appointment
+        CREATE_APPOINTMENT,CREATE_APPOINTMENT_FAILED,
+        
          //get pending appointments   
         FETCH_PENDING_APPOINTMENTS,FETCH_PENDING_APPOINTMENTS_FAILED,
     
         //get completed appointments
-            FETCH_COMPLETED_APPOINTMENTS,FETCH_COMPLETED_APPOINTMENTS_FAILED,
+        FETCH_COMPLETED_APPOINTMENTS,FETCH_COMPLETED_APPOINTMENTS_FAILED,
         
         //delete pending appointments  
-            DELETE_PENDING_APPOINTMENT,DELETE_PENDING_APPOINTMENT_FAILED,
+        DELETE_PENDING_APPOINTMENT,DELETE_PENDING_APPOINTMENT_FAILED,
 } from './types'
 
 
@@ -29,6 +31,32 @@ export const removeFromAppointments=(id)=>{
       type:REMOVE_FROM_APPOINTMENTS,
       payload:id
   })
+}
+
+//create appointment 
+export const createAppointment=(appoint)=>{
+    
+    return function(dispatch){
+        axios({
+            method: 'post',
+            url: 'http:139.59.163.209:8080/public/app/insert',
+            data:{
+                "clientId":appoint.clientId,
+                "serviceId":appoint.id,
+                "respondTime":appoint.date,
+                'branchId':appoint.branchId
+            },
+            config:{header:{"Content-Type": "application/json"}}
+          
+        })
+        .then(function(response){
+            dispatch({type:CREATE_APPOINTMENT, payload:response});
+            
+          })
+          .catch(function(err){
+            dispatch({type:CREATE_APPOINTMENT_FAILED, payload:err})
+          })
+      }
 }
 
 //fetch completed orders

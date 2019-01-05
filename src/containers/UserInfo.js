@@ -1,45 +1,74 @@
 import React from 'react'
-import {View, Text, StyleSheet,TextInput,Image,KeyboardAvoidingView,Platform} from 'react-native'
+import {View, Text, StyleSheet,TextInput,Image,KeyboardAvoidingView,Platform,AsyncStorage} from 'react-native'
 import colors from '../styles/colors'
 import {connect} from 'react-redux'
 import {getClientById} from '../redux/actions'
+const salonImage= require('../images/salon4.jpg')
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 class UserInfo extends React.Component{
 
-    componentDidMount(){
-        const clientId=4
-        this.props.getClientById(clientId)
+    componentDidMount=async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+        this.props.getClientById(item.clientId)
     }
+
     render(){
-        console.log(this.props.currentUser)
-        const {wrapperStyle,}=styles
+       
+        const {wrapperStyle,infotWrapperStyle,iconWrapper}=styles
+        const {currentUser}=this.props
+        const data = currentUser ? currentUser.data : ''
         return(
             <View style={wrapperStyle}>
+            <View style={{display:'flex', alignItems:'center'}}>
+              <View style={iconWrapper}>
+                 <Image source={salonImage} style={{width:'100%',height:'100%'}}/>
+              </View>
+            </View>
+            <View style={infotWrapperStyle}>
+              <View style={{flex:1, alignItems:'flex-start',justifyContent:'center'}}>
+                 <Text style={{color:colors.black02,fontSize:hp('2.3%'),fontWeight:'300'}}>
+                   Contact
+                 </Text>
+             </View>
 
-         <KeyboardAvoidingView style={styles.infoWrapper}>
-          <Text style={styles.label}>First Name</Text>
-         <TextInput style={styles.inputField}
-                  placeholder="John"
-                  placeholderTextColor="#212F3D"
-                  />
+             <View style={{flex:2,paddingLeft:10,alignItems:'flex-start',justifyContent:'center'}}>
+                 <Text style={{flex:2,color:colors.black01,fontSize:hp('2.7%'),fontWeight:'400'}}>
+                   {data !== '' ? data.firstName:data +"  "+ data !== '' ? data.lastName:data }
+                 </Text>
+             </View>
+         </View>
+         
 
-         <Text style={styles.label}>Last Name</Text>
-         <TextInput style={styles.inputField}
-                  placeholder="Doe"
-                  placeholderTextColor="#212F3D"
-                  />
-          <Text style={styles.label}>Phone Number</Text>
-          <TextInput style={styles.inputField}
-                  placeholder="078453223"
-                  placeholderTextColor="#212F3D"
-                  />
+         <View style={infotWrapperStyle}>
+              <View style={{flex:1, alignItems:'flex-start',justifyContent:'center'}}>
+                 <Text style={{color:colors.black02,fontSize:hp('2.3%'),fontWeight:'300'}}>
+                  Phone Number
+                 </Text>
+             </View>
 
-           <Text style={styles.label}>Email</Text>
-          <TextInput style={styles.inputField}
-                  placeholder="johnDoe@deo.com"
-                  placeholderTextColor="#212F3D"
-                  />
-         </KeyboardAvoidingView>
+             <View style={{flex:2,paddingLeft:10,alignItems:'flex-start',justifyContent:'center'}}>
+                 <Text style={{flex:2,color:colors.black01,fontSize:hp('2.7%'),fontWeight:'400'}}>
+                   {data !== '' ? data.phoneNumber:data}
+                 </Text>
+             </View>
+         </View>
+         <View style={infotWrapperStyle}>
+              <View style={{flex:1,alignItems:'flex-start',justifyContent:'center'}}>
+                 <Text style={{color:colors.black02,fontSize:hp('2.3%'),fontWeight:'300'}}>
+                  Email
+                 </Text>
+             </View>
+
+             <View style={{flex:2,paddingLeft:10,alignItems:'flex-start',justifyContent:'center'}}>
+                 <Text style={{flex:2,color:colors.black01,fontSize:hp('2.7%'),fontWeight:'400'}}>
+                   {data !== '' ? data.email:data }
+                 </Text>
+             </View>
+         </View>
             </View>
         )
     }
@@ -56,55 +85,24 @@ export default connect(mapStateToProps,{getClientById})(UserInfo)
 const styles= StyleSheet.create({
     wrapperStyle:{
         display:'flex',
-        
-    },
-    iconWrapper:{
-        width:Platform.OS === 'ios' ? 90: 60,
-        height:Platform.OS === 'ios' ? 90: 60,
-        marginBottom:Platform.OS === 'ios' ? 20: 15,
-        borderRadius:Platform.OS === 'ios' ? 90: 60,
-        backgroundColor:'#fff',
-        shadowColor: '#000000',
-        shadowOffset: { height: 2},
-        shadowOpacity: 0.8,
-        shadowRadius: Platform.OS === 'ios' ? 5:4,
-       
-        borderColor:colors.white,
-        alignItems:'center',
-        justifyContent:'center'
-    },
-    infoWrapper:{
-        display:'flex',
-        marginTop:Platform.OS === 'ios' ? 15 : 10,
-       
-        paddingRight:10,
-        paddingLeft:10,
-        paddingTop:10,
+        padding:10,
         backgroundColor:colors.white,
-        borderWidth:1,
-        borderColor:colors.gray01
+        marginTop:15
     },
-     inputField:{
-       flexGrow:1,
-       display: 'flex',
-       flexDirection:'row',
-     backgroundColor: '#F2F4F4',
-     borderRadius: 4,
-     fontWeight:Platform.OS === 'ios' ? '600': '500',
-     height:Platform.OS === 'ios' ? 32: 27,
-     paddingLeft:Platform.OS === 'ios' ?30 : 25,
-     paddingRight:Platform.OS === 'ios' ? 30 : 25,
-     marginLeft:Platform.OS === 'ios' ? 30: 25,
-     marginRight:Platform.OS === 'ios' ? 30: 25,
-     marginBottom:10,
-     fontSize:Platform.OS === 'ios' ? 16: 13,
-   },
-   label:{
-       fontSize:Platform.OS === 'ios' ? 18: 14,
-       fontWeight:Platform.OS === 'ios' ? '600': '500',
-       color:'#000',
-       marginLeft:Platform.OS === 'ios' ? 30: 25,
-       marginRight:Platform.OS === 'ios' ? 30: 25,
-       marginBottom:Platform.OS === 'ios' ? 10: 5,
-   }
+    infotWrapperStyle:{
+        display:'flex',
+        flexDirection:'row',
+        padding:5
+    },
+
+    iconWrapper:{
+        display:'flex',
+        width:wp('25%'),
+        height:hp('14%'),
+        // margin:Platform.OS === 'ios' ? 20: 15,
+        borderRadius:5,
+        top:-20
+
+    },
+    
 })

@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {getCompletedOrders} from "../redux/actions"
 
-import {View,ScrollView,Text,StyleSheet,Platform} from 'react-native';
+import {View,ScrollView,Text,StyleSheet,Platform,AsyncStorage} from 'react-native';
 import CartCard from '../components/orders/CartCard'
 import colors from '../styles/colors'
 
@@ -11,9 +11,11 @@ import colors from '../styles/colors'
  class CompletedOrdersContainer extends React.Component{
     
 
-    componentDidMount(){
-        const id= 4
-        this.props.getCompletedOrders(id)
+    componentDidMount= async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+
+        this.props.getCompletedOrders(item.clientId)
     }
     renderShops(){
         const {completedOrders} = this.props

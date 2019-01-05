@@ -12,7 +12,9 @@ import {searchUpdate,getAllProvinces,
     } from '../redux/actions'
 import PickerModal from '../components/common/PickerModal'
 import Button from '../components/buttons/Button'
-
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 
  class SearchContainer extends React.Component{
@@ -352,7 +354,7 @@ export default connect(mapStateToProps,
     searchButtonStyle:{
         display:'flex',
         height:50,
-        width:300,
+        width:wp('50%'),
         borderRadius:4,
         flexDirection:'row',
         borderColor:colors.white,

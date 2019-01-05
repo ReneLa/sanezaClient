@@ -4,22 +4,32 @@ import { View,StyleSheet,Text,TextInput,Button,TouchableOpacity} from 'react-nat
 import RoundedButton from '../../components/buttons/RoundedButton' 
 import colors from '../../styles/colors'
 // import Button from '../../components/buttons/Button' 
-import ConfirmModal from '../../components/common/ConfirmModal'
+import ConfirmPayModal from '../../components/common/ConfirmPayModal'
+import {connect} from 'react-redux'
+import Loader from '../../components/Loader';
+import {refreshCart} from '../../redux/actions'
+const salonImage= require('../../images/salon4.jpg')
+import {StackActions,NavigationActions} from 'react-navigation'
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
-export default class PaymentScreen extends Component{
+ class PaymentScreen extends Component{
      
-    static navigationOptions=({navigation})=>({
-        title:"Saneza",
+    static navigationOptions=({navigation})=>{
+        const { title} = navigation.state.params
+        return {
+        title,    
         headerLeft:<RoundedButton customStyle={{marginLeft:5,width:45,height:45}}
                                  handlePress={()=>{navigation.goBack()}} icon={<FontAwesome name="angle-left" size={35} color={colors.white}/>}/>,
         headerStyle:{
             backgroundColor:colors.primary,
             elevation:4,
-            borderBottomWidth:0,
-            shadowColor: '#000000',
-            shadowOffset: { height: 2},
-            shadowOpacity: 0.8,
-            shadowRadius: 5,
+            // borderBottomWidth:0,
+            // shadowColor: '#000000',
+            // shadowOffset: { height: 2},
+            // shadowOpacity: 0.8,
+            // shadowRadius: 5,
 
         },
         headerTitleStyle:{
@@ -28,12 +38,12 @@ export default class PaymentScreen extends Component{
              color:colors.white
         },
         gesturesEnables:false
-    })
+    }}
 
     constructor(props){
         super(props);
         this.state ={
-           
+            loading:false,
             isConfirm:false
         }
         this.onConfirmPay=this.onConfirmPay.bind(this)
@@ -42,19 +52,45 @@ export default class PaymentScreen extends Component{
     }
    
     onConfirmPay(){
+        // this.setState({loading:true})
         this.setState({isConfirm:true})
+        // setTimeout(() => {
+        // this.setState({loading:false,isConfirm:true})
+           
+        //   }, 1000);
     }
 
     donePayment(){
         this.closeModal()
-        const {navigate}=this.props.navigation
-        navigate('Bookings_Completed')
+        const {navigation}=this.props
+        // navigate('Bookings')
+        const popAction = StackActions.pop({
+            n: 3,
+          });
+      navigation.dispatch(popAction);
+        this.props.refreshCart()
     }
    closeModal(){
      this.setState({isConfirm:false})
    }
         
   render(){
+    //   console.log(this.props.navigation.state)
+     const {shopName,shopLocation}= this.props.navigation.state.params 
+    const initialValue=0;
+    const sum = this.props.byHash.reduce(
+                   (total, currentValue) => {
+
+                    return total + currentValue.price
+
+                   },
+                   initialValue        
+                        
+            );
+            const discount=0.15
+            const totalAfterDiscount=sum*discount
+
+
             const {wrapperStyle,titleWrapper,headerTextStyle,
                 cardStyle,cardContentStyle,cardDescriptionStyle,
                 totalWrapperStyle,dividerStyle,couponCodeWrapper,
@@ -66,8 +102,7 @@ export default class PaymentScreen extends Component{
             <View style={wrapperStyle}>
           
             <View style={titleWrapper}>
-                <Text style={headerTextStyle}>Payment at</Text> 
-                <Text style={headerTextStyle}>One Love Salon</Text> 
+                <Text style={headerTextStyle}>{"@ "+ shopName}</Text> 
             </View>
            
             <View style={cardStyle}>
@@ -76,11 +111,11 @@ export default class PaymentScreen extends Component{
                 
                  <View style={totalWrapperStyle}>
                    
-                     <Text style={{fontWeight:'300',fontSize:30}}>
+                     <Text style={{fontWeight:'300',fontSize:hp('3%')}}>
                         TOTAL:
                      </Text> 
                      <Text style={{fontWeight:'500',fontSize:30}}>
-                         2000 rwf
+                        {sum + ' rwf'}
                     </Text>
                    
                 </View> 
@@ -98,7 +133,7 @@ export default class PaymentScreen extends Component{
                       placeholderTextColor="#212F3D"
                      />
                    <Text style={discountPercent}>
-                       15%
+                     {discount}
                    </Text>
                </View>
               <View style={{display:'flex', flexDirection:'row'}}>
@@ -107,7 +142,7 @@ export default class PaymentScreen extends Component{
                   Total Offer Coupon:
                </Text>
                    <Text style={{fontSize:30, fontWeight:'500',color:'#000'}}>
-                       1700 Rwf
+                       {totalAfterDiscount+ ' Rwf'}
                    </Text>
               </View>
                </View>
@@ -125,17 +160,32 @@ export default class PaymentScreen extends Component{
                  <Text style={buttonText}>Confirm and Pay</Text>
               </TouchableOpacity>
             </View>
-            <ConfirmModal
+            <ConfirmPayModal
                  modalVisible={visible}
-                 firstLine="Successfully Paid"
-                 secondLine="We like our Clients"
+                 amount={sum}
+                 image={salonImage}
+                 shop={shopName}
+                 shopLocation={shopLocation} 
                  onClose={this.donePayment}
             />
+            <Loader 
+            animationType={'fade'}
+            modalVisible={this.state.loading}/>
            </View>
         )
        
     }
 }
+
+function mapStateToProps({cart}){
+    const {byHash} = cart
+
+    return {
+        byHash
+    }
+}
+
+export default connect(mapStateToProps,{refreshCart})(PaymentScreen)
 
 
 const styles =StyleSheet.create({
@@ -155,19 +205,19 @@ const styles =StyleSheet.create({
         marginBottom:40
     },
     headerTextStyle:{
-        fontSize:40,
-        fontWeight:'400',
+        fontSize:hp('3.5%'),
+        fontWeight:'600',
         color:colors.black01,
     },
     cardStyle:{
     display:'flex',
     flexDirection:'column',
-    borderWidth:1,
+    // borderWidth:1,
     borderRadius:5,
-    borderColor:'#D6DBDF',
+    // borderColor:'#D6DBDF',
     marginLeft:10,
     marginRight:10,
-    marginBottom:20,
+    marginBottom:hp('4%'),
     // width:'80%',
     backgroundColor:'#fff',
     zIndex:-1

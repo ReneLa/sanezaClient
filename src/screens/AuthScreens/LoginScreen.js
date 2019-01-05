@@ -10,11 +10,13 @@ import colors from '../../styles/colors'
 const loginBackground =require('../../images/loginPaper.jpg');
 import {InputField} from '../../components/forms/InputField'
 import {LoginButton} from '../../components/buttons/LoginButton'
-import {usernameChanged,passwordChanged,loginUser,saveUser} from '../../redux/actions'
+import {usernameChanged,passwordChanged,loginUser,onValueChange} from '../../redux/actions'
 import { onSignIn } from "../../auth"
 import axios from 'axios'
 import Notification from '../../components/Notification'
-
+import { 
+        widthPercentageToDP as wp, heightPercentageToDP as hp
+      } from 'react-native-responsive-screen';
 
 
 class LoginScreen extends React.Component{
@@ -62,9 +64,17 @@ class LoginScreen extends React.Component{
         })
         .then((response) => {
           if (response.status == 200){
+            const userToBeSaved = response.data.RETURN_DATA.user
             
-            const userKey=response.data.RETURN_DATA.token
-            AsyncStorage.setItem('auth_key', userKey);
+
+              AsyncStorage.setItem("client", JSON.stringify(userToBeSaved) )
+                .then( ()=>{
+                    console.log("It was saved successfully")
+                  } )
+             .catch( ()=>{
+                   console.log("There was an error saving the product")
+                } )
+
             this.setState({isLogin:true})
           }
           else{
@@ -100,17 +110,10 @@ class LoginScreen extends React.Component{
       this.props.navigation.navigate('Signup')
     }
   
-    renderError(){
-      if(this.props.error){
-        return(
-          <View style={{display:"flex", backgroundColor:"#fff"}}>
-            <Text style={{ color:"red",fontSize:25,}}>{this.props.error}</Text>
-          </View>
-        )
-      }
-    }
 
   render(){
+        const {onValueChange}=this.props
+
         const {imageWrapper,wrapper,scrollView,headerWrapper,
                loginHeader,underline,optionsButtons,
                forgotPasswordText,signUpText}=styles
@@ -131,7 +134,9 @@ class LoginScreen extends React.Component{
                        
           <KeyboardAvoidingView
             behavior="padding"
-              style={[wrapper]}>
+              style={[wrapper]}
+              
+              >
                 <ScrollView contentContainerStyle={scrollView}>
               
                 <View style={headerWrapper}>
@@ -142,28 +147,29 @@ class LoginScreen extends React.Component{
                 </View>  
 
                 <InputField  
-                    placeholder={"hviewTech"}
+                    placeholder={"username"}
                     value={this.props.username}
-                    onChangeText={this.onUsernameChange.bind(this)}  
-                    label={<FontAwesome name="user-circle" size={Platform.OS === 'ios' ? 45 : 30} color={colors.white}
+                    onChangeText={value=>onValueChange({prop:'username',value})}  
+                    label={<FontAwesome name="user-circle" size={hp('5.5%')} color={colors.white}
                    
                   />}
-                    customStyle={{marginBottom:30,marginTop:20}}
+                    customStyle={{width: wp('90%'),marginBottom:30,marginTop:20}}
                     /> 
 
                 <InputField  
                     secureTextEntry
                     placeholder={"password"}
-                    value={this.state.password}
-                    onChangeText={this.onPasswordChange.bind(this)}  
-                    label={<Entypo name="key" size={Platform.OS === 'ios' ? 45 : 30} color={colors.white}/>}
-                    customStyle={{marginBottom:30}}
+                    value={this.props.password}
+                    onChangeText={value=>onValueChange({prop:'password',value})}   
+                    label={<Entypo name="key" size={hp('5.5%')} color={colors.white}/>}
+                    customStyle={{width: wp('90%'),marginBottom:30}}
                     /> 
-                  {this.renderError()}
+                 
 
                  <LoginButton 
                      label={'LOGIN'}
                       handlePress={this.onLoginPress.bind(this)}
+                      customStyle={{width:wp('70%'),borderRadius:5}}
                  />
 
                    <View style={optionsButtons}>
@@ -210,60 +216,68 @@ const mapStateToProps =({auth}) =>{
 
 
 export default connect(mapStateToProps,{
-          usernameChanged,passwordChanged,loginUser
+          onValueChange,loginUser
         })(LoginScreen)
 
 const styles =StyleSheet.create({
   imageWrapper:{
     width:'100%',
     height:'100%',
-  
   },
   wrapper:{
     display:'flex',
     flex:1,
-    flexDirection:'row'
+    flexDirection:'row',
+   
   },
   scrollView:{
     paddingLeft:10,
     paddingRight:10,
     paddingTop:30,
     flex:1,
+    alignItems:'center',
+    justifyContent:'center'
+
   },
   headerWrapper:{
+    display:'flex',
+    width:'100%',
     alignItems:'center',
     justifyContent:'center',
     marginTop:Platform.OS === 'ios' ? 60 : 40,
     marginBottom:Platform.OS === 'ios' ? 80: 60,
   } ,
   loginHeader:{
-    fontSize:Platform.OS === 'ios' ? 50 : 30,
+    fontSize:hp('7%'),
     color:colors.white,
     fontWeight:'400',
     marginBottom:10,
   },
   underline:{
-    borderWidth:Platform.OS === 'ios' ? 3:2,
-    width:'35%',
+    display:'flex',
+    
+    borderWidth:hp('0.3%'),
+    width:wp('30%'),
     borderColor:colors.white,
   },
   optionsButtons:{
     display:'flex', 
     flexDirection:'row',
-    justifyContent: 'space-between',
+    width:'100%',
+    justifyContent: 'space-evenly',
     marginLeft:20,
     marginRight:20,
     marginTop:30
   },
   forgotPasswordText:{
     color:colors.white,
-    fontSize:Platform.OS === 'ios' ? 23 :16,
+    fontSize:hp('3%'),
     fontWeight:Platform.OS === 'ios' ? '200': '100',
     
     },
 
     signUpText:{
-      fontSize: Platform.OS === 'ios' ? 23 : 16,
+      fontSize: hp('3.2%'),
       color:colors.white,
       fontWeight:Platform.OS === 'ios' ? '600' : '500',  
     },

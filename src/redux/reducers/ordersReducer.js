@@ -1,4 +1,7 @@
 import {
+    //make an order
+    MAKE_ORDER,MAKE_ORDER_FAILED,
+
     FETCH_PENDING_ORDERS,FETCH_PENDING_ORDERS_FAILED,
 
     DELETE_PENDING_ORDER,DELETE_PENDING_ORDER_FAILED,
@@ -11,6 +14,7 @@ const INITIAL_STATE={
     completedOrders:[],
     error:'',
     loading:false,
+    newOrder:{}
     
 }
 
@@ -18,6 +22,12 @@ export default (state=INITIAL_STATE,action)=> {
 
     switch(action.type){   
 
+        case MAKE_ORDER:
+           return{...state,newOrder:action.payload} 
+         
+        case MAKE_ORDER_FAILED :
+            return {...state, error:'cant make order'}
+            
          //fetch pending orders
         case FETCH_COMPLETED_ORDERS :
            return{...state,completedOrders:action.payload} 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {FontAwesome,MaterialIcons}from '@expo/vector-icons'
-import {View,StyleSheet,Text,Platform} from 'react-native'
+import {View,StyleSheet,Text,Platform,TouchableOpacity} from 'react-native'
 import colors from '../../styles/colors'
 import IconButton from '../buttons/IconButton'
 import Item from '../orders/Item'
@@ -11,7 +11,7 @@ const PendingAppointCard = ({name,location,handleCancelPress,total,
     const {wrapperStyle, cardActionsWrapper,cardFooterStyle,
            nameWrapperStyle,nameStyle,actionButtonsStyle,totalTextStyle}=styles
     return(
-        <View style={wrapperStyle}>
+        <TouchableOpacity style={wrapperStyle}>
            <View style={cardActionsWrapper}>
               <View style={nameWrapperStyle}>
                   <Text style={nameStyle}>{name}</Text>
@@ -69,7 +69,7 @@ const PendingAppointCard = ({name,location,handleCancelPress,total,
                  <Text style={totalTextStyle}>Total:</Text>
                  <Text style={totalTextStyle}>{total + ' Rwf'}</Text>
            </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -79,9 +79,10 @@ const styles = StyleSheet.create({
     wrapperStyle:{
         display:'flex',
         flex:1,
+        borderRadius:6,
         backgroundColor:colors.white,
-        borderWidth:0.7,
-        borderColor:colors.gray,
+        // borderWidth:0.7,
+        // borderColor:colors.gray,
         // height:Platform.OS === 'ios' ?250 : 200,
         marginTop:Platform.OS === 'ios' ? 7.5: 5.5,
         marginBottom:Platform.OS === 'ios' ?7.5 : 5.5

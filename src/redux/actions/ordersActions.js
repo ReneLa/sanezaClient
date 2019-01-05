@@ -2,6 +2,9 @@ import axios from 'axios'
 
 
 import {
+    //make an order
+        MAKE_ORDER,MAKE_ORDER_FAILED,
+        
     //get pending orders    
         FETCH_PENDING_ORDERS,FETCH_PENDING_ORDERS_FAILED,
     
@@ -12,7 +15,33 @@ import {
         DELETE_PENDING_ORDER,DELETE_PENDING_ORDER_FAILED,
 } from './types'
 
-
+//make an order
+export const makeNewOrder=(order)=>{
+    
+    return function(dispatch){
+        axios({
+            method: 'post',
+            url: 'http:139.59.163.209:8080/public/order/insert',
+            data:{
+                "clientId":order.clientId,
+                "productId":order.id,
+                "branchId":order.branchId,
+                "delivredTime":order.time,
+                "quantity":order.quantity,
+                "orderNo":order.orderNo
+            },
+            config:{header:{"Content-Type": "application/json"}}
+          
+        })
+        .then(function(response){
+            dispatch({type:MAKE_ORDER, payload:response});
+            
+          })
+          .catch(function(err){
+            dispatch({type:MAKE_ORDER_FAILED, payload:err})
+          })
+      }
+}
 //fetch completed orders
 export const getCompletedOrders=(clientId)=>{
     

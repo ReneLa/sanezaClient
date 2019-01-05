@@ -9,7 +9,9 @@ import BottomContainer from '../components/BottomContainer'
 import {connect} from 'react-redux';
 import {getSingleShop} from "../redux/actions"
 import colors from '../styles/colors'
-
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 const image1=require('../images/salon4.jpg')
 const image2 = require('../images/salon3.jpg')
 const image3 = require('../images/salon5.jpg')
@@ -59,9 +61,11 @@ const BAR_SPACE = 10
         const {shop}=this.props.singleShop
         const shopname= singleShop ? shop.shopName : ''
 
-        const {navigate} = this.props.navigation
-      
-        navigate('BookService',{
+        const {navigation} = this.props
+        
+        // navigation.setParams({me: "rene"})
+
+        navigation.navigate('BookService',{
                    branchId:id,
                    shopName:shopname,
                    shopLocation:singleShop.locationName
@@ -69,11 +73,15 @@ const BAR_SPACE = 10
     }
     onOrderProducts(id){
        
-         
+        const {singleShop}=this.props
+        const {shop}=this.props.singleShop
+        const shopname= singleShop ? shop.shopName : ''
         const {navigate} = this.props.navigation;
+        
         navigate('MakeOrders',{
             branchId:id,
-            
+            shopName:shopname,
+            shopLocation:singleShop.locationName
         });
     }
     render(){
@@ -83,7 +91,7 @@ const BAR_SPACE = 10
         imagesArr.forEach((image,i)=>{
 
             const thisImage=(
-                <Image key={`image${i}`} source={image} style={{ width: deviceWidth,height:400 }} />
+                <Image key={`image${i}`} source={image} style={{ width: deviceWidth,height:'100%' }} />
 
             )
 
@@ -135,7 +143,7 @@ const BAR_SPACE = 10
 
                     <View  style={{
                                     display:'flex',  
-                                    height:400,
+                                    height:hp('50%'),
                                      alignItems:'center',
                        }}>
                         <ScrollView
@@ -189,19 +197,19 @@ const BAR_SPACE = 10
                         <View style={styles.description}>
 
                            <View style={styles.headWrapperStyle}>
-                              { singleShop  ? <Text style={[{fontSize:25,fontWeight:'600'},styles.headTextStyle]}>{shop.shopName}</Text> : ''}
+                              { singleShop  ? <Text style={[{fontSize:hp('3%'),fontWeight:'600'},styles.headTextStyle]}>{shop.shopName}</Text> : <Text>hey</Text>}
                                <Text style={[{fontSize:16,fontWeight:'500'},styles.headTextStyle]}>{singleShop.locationName}, {singleShop.streetName}</Text>
                            </View>
 
                            <View style={styles.infoWrapperStyle}>
-                              <Text style={[{fontSize:18,fontWeight:'600'},styles.headTextStyle]}>Open Days: </Text>
-                              <Text style={[{fontSize:16,fontWeight:'400'},styles.headTextStyle]}>{singleShop.openDays} </Text>
+                              <Text style={[{fontSize:hp('2.5%'),fontWeight:'600'},styles.headTextStyle]}>Open Days: </Text>
+                              <Text style={[{fontSize:hp('2.5%'),fontWeight:'400'},styles.headTextStyle]}>{singleShop.openDays} </Text>
                            </View>
                            <View style={styles.infoWrapperStyle}>
                            { singleShop ? 
-                            <Text style={[{fontSize:16,fontWeight:'400',color:colors.black02}]}>
+                            <Text style={[{fontSize:hp('2%'),fontWeight:'400',color:colors.black02}]}>
                                 {shop.description}
-                            </Text>  : ''  }
+                            </Text>  : <Text>hey</Text> }
                            </View>
                            
                         </View>
@@ -214,22 +222,22 @@ const BAR_SPACE = 10
                     showBottomNav={true}
                     buttonOne={<ButtonWithIcon handlePress={this.onBookService.bind(this,singleShop.branchId)}
                                        label="Book Service"
-                                       textSize={Platform.OS === 'ios' ? 18 : 16}
+                                       textSize={hp('2.5%')}
                                        icon={
                                           <MaterialCommunityIcons 
-                                                                  name="email-open-outline" size={Platform.OS === 'ios' ?30 : 25} color={colors.blue01}/>}
+                                                                  name="email-open-outline" size={hp('4%')} color={colors.blue01}/>}
                                        customStyle={{backgroundColor:colors.white,borderRadius:2}}
                     />}
                     buttonTwo={<ButtonWithIcon handlePress={this.onOrderProducts.bind(this,singleShop.branchId)}
                                        label="Order Products"
-                                       textSize={Platform.OS === 'ios' ? 18 : 14}
+                                       textSize={hp('2.5%')}
                                        icon={
                                           <FontAwesome  
-                                                       name="calendar-o" size={Platform.OS === 'ios' ? 25 : 20} color={colors.blue01}/>}
+                                                       name="calendar-o" size={hp('4%')} color={colors.blue01}/>}
                                        textColor={'#2C3E50'}
                                        customStyle={{backgroundColor:colors.white,borderRadius:2}}
                     />}
-                    customStyle={{height:75,backgroundColor:colors.primary}}/>
+                    customStyle={{height:hp('10%'),backgroundColor:colors.primary}}/>
             </View>
         )
 
@@ -262,7 +270,7 @@ const styles =StyleSheet.create({
     },
     image:{
         width:'100%',
-        height:Platform.OS === 'ios' ? 250 : 200,
+        height:hp('20%'),
         alignItems:'center',
         justifyContent:'center',
         paddingTop:Platform.OS === 'ios' ? 50: 40
@@ -275,14 +283,14 @@ const styles =StyleSheet.create({
         top:Platform.OS === 'ios' ? -120 : -100,
     },
     compName:{
-        fontSize:Platform.OS === 'ios' ? 35 : 30,
+        fontSize:hp('3.5%'),
         color:colors.white,
         fontWeight:Platform.OS === 'ios' ? '500' :'400',
         marginBottom:Platform.OS === 'ios' ? 20 : 15,
 
     },
     locationText:{
-        fontSize:Platform.OS === 'ios' ? 20 : 15,
+        fontSize:hp('3.3%'),
         fontWeight:'bold',
         color:'#fff',
         marginBottom:15
@@ -326,9 +334,9 @@ const styles =StyleSheet.create({
 
     },
     text:{
-        fontSize:18,
-        fontWeight:'bold',
-        color:'#000',
+        fontSize:hp('3%'),
+        fontWeight:'400',
+        color:colors.black02,
 
     },
 

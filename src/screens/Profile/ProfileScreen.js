@@ -9,30 +9,46 @@ import {onSignOut} from '../../auth'
 
 export default class ProfileScreen extends React.Component{
     static navigationOptions=({navigation})=>({
-        title:"Saneza",
+        // title:"Saneza",
         headerRight:<RoundedButton customStyle={{marginRight:2,
             width:Platform.OS === 'ios' ? 45: 40,
             height:Platform.OS === 'ios' ? 45: 40}}
-                                 handlePress={onSignOut} 
+                                 handlePress={()=>{
+                                     onSignOut()
+                                     .then(()=>navigation.navigate('LoginScreen'))
+                                 }} 
                                  icon={<MaterialIcons name="more-vert"
-                                  size={Platform.OS === 'ios' ? 35: 30} color={colors.white}/>}/>,
-        headerStyle:{
-            backgroundColor:colors.primary,
-            elevation:4,
-            borderBottomWidth:0,
-            shadowColor: colors.gray02,
-            shadowOffset: { height: 2},
-            shadowOpacity: 0.8,
-            shadowRadius: 5,
+                                  size={Platform.OS === 'ios' ? 35: 30} color={colors.blue01}/>}/>,
+        // headerStyle:{
+        //     backgroundColor:colors.primary,
+        //     elevation:4,
+        //     borderBottomWidth:0,
+        //     shadowColor: colors.gray02,
+        //     shadowOffset: { height: 2},
+        //     shadowOpacity: 0.8,
+        //     shadowRadius: 5,
 
-        },
+        // },
         headerTitleStyle:{
             fontWeight:Platform.OS === 'ios' ? '700': '600',
             fontSize:Platform.OS === 'ios' ? 18: 14,
              color:colors.white
         },
+        headerTransparent:true,
         gesturesEnables:false
     })
+
+
+    signOut=()=>{
+        const {navigation}=this.props
+
+        onSignOut()
+        .then(()=>{
+            navigation.navigate('LoginScreen')
+         })
+    
+
+    }
     render(){
         const {wrapperStyle}=styles
         return(
@@ -47,6 +63,6 @@ const styles = StyleSheet.create({
     wrapperStyle:{
         display:'flex',
         flex:1,
-        backgroundColor:colors.gray01
+        // backgroundColor:colors.primary
     }
 })

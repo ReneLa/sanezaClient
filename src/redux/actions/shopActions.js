@@ -12,17 +12,19 @@ import {
     
     //single shop products
         FETCH_SHOP_PRODUCTS,FETCH_SHOP_PRODUCTS_FAILED,
-
-        REFRESH
+        FETCH_PRODUCT,FETCH_PRODUCT_FAILED,
+    //order product  
+    
+    
+        REFRESH_SHOP
     
 } from './types'
 
 //shop actions 
 
-export const refresh =({prop})=>{
+export const refreshShop =()=>{
     return{
-        type:REFRESH,
-        payload:prop
+        type:REFRESH_SHOP
     }
 }
 
@@ -124,4 +126,22 @@ export const getShopProducts=(id)=>{
       }
 }
 
+export const getProduct=(id)=>{
+    return function(dispatch){
+        axios({
+            method: 'post',
+            url: 'http://139.59.163.209:8080/public/products/getinfo',
+            data:{"productId":id},
+            config:{header:{"Content-Type": "application/json"}}
+          
+        })
+        .then(function(response){
+            dispatch({type:FETCH_PRODUCT, payload:response.data.RETURN_DATA.data});
+            
+          })
+          .catch(function(err){
+            dispatch({type:FETCH_PRODUCT_FAILED, payload:err})
+          })
+      }
+}
 

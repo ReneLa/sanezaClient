@@ -21,8 +21,7 @@ const PickerModal=({picker,modalVisible,onClose})=>{
             
               <View style={containerStyle}>
                    <View style={headerStyle}>
-                       <TouchableOpacity onPress={onClose}>
-                             
+                       <TouchableOpacity onPress={onClose}>             
                            <Text style={textStyle}>Done</Text>
                        </TouchableOpacity>  
                    </View> 
@@ -52,11 +51,12 @@ const styles =StyleSheet.create({
           left:0,
           zIndex:-1,
           backgroundColor:'#fff',
+        
     },
    headerStyle:{
        display:'flex',
        alignItems:'flex-end',
-       
+      
        padding:10,
        borderColor:colors.gray,
        borderWidth:1

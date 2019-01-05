@@ -1,6 +1,9 @@
 import React from 'react'
 import {View, Text, StyleSheet,TouchableOpacity,Platform} from 'react-native'
 import colors from '../../styles/colors'
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 export default ShopCard =({handlePress,image,title,location,rating})=>{
     const {wrappeStyle,cardImageStyle,cardContent,locationStyle,nameStyle,
@@ -29,10 +32,12 @@ export default ShopCard =({handlePress,image,title,location,rating})=>{
 const styles=StyleSheet.create({
     wrappeStyle:{
       display:'flex',
-      maxHeight:Platform.OS === 'ios' ? 250 : 200,
-      width:Platform.OS === 'ios' ? 200 :180,
+      height:hp('30%'),
+      marginLeft:10,
+      marginRight:10,
+      width:wp('90%'),
       backgroundColor:colors.white,
-      borderColor:colors.gray01,
+      borderColor:colors.gray03,
       borderWidth:0.5,
       borderRadius:2,
       elevation:5,
@@ -44,12 +49,12 @@ const styles=StyleSheet.create({
     },
     cardImageStyle:{
         display:'flex',
-        height:Platform.OS === 'ios' ? 100 : 90,
+        height:hp('20%'),
     },
     cardContent:{
         display:'flex',
         paddingTop:10,
-        paddingBottom:10,
+        // paddingBottom:10,
         backgroundColor:colors.white
     },
     titleWrapper:{
@@ -59,12 +64,12 @@ const styles=StyleSheet.create({
     },
     nameStyle:{
         color:colors.black01,
-        fontSize:22,
+        fontSize:hp('2.2%'),
         fontWeight:'600'
     },
     locationStyle:{
         color:colors.black01,
-        fontSize:18,
+        fontSize:hp('1.9%'),
         fontWeight:'400'
     },
     lineBreak:{
@@ -87,7 +92,7 @@ const styles=StyleSheet.create({
     },
     ratingTextStyle:{
         color:colors.gray,
-        fontSize:16,
+        fontSize:hp('2%'),
         fontWeight:'400'
     }
 })

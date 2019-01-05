@@ -1,16 +1,20 @@
 import React from 'react'
 import {FontAwesome,MaterialIcons}from '@expo/vector-icons'
-import {View,StyleSheet,Text,Platform} from 'react-native'
+import {View,StyleSheet,Text,Platform,TouchableOpacity} from 'react-native'
 import colors from '../../styles/colors'
 import IconButton from '../../components/buttons/IconButton'
 import Item from './Item'
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 const CartCard = ({name,location,handlePress,total,listing})=>{
+
     const {wrapperStyle, cardActionsWrapper,cardFooterStyle,
            nameWrapperStyle,nameStyle,actionButtonsStyle,totalTextStyle}=styles
           
     return(
-        <View style={wrapperStyle}>
+        <TouchableOpacity style={wrapperStyle}>
            <View style={cardActionsWrapper}>
               <View style={nameWrapperStyle}>
                   <Text style={nameStyle}>{name}</Text>
@@ -18,7 +22,7 @@ const CartCard = ({name,location,handlePress,total,listing})=>{
               <View style={nameWrapperStyle}>
                   <Text style={{
                       color:colors.blue01,
-                      fontSize:Platform.OS === 'ios' ? 14 : 12,
+                     fontSize:hp('1.5%'),
                       fontWeight:Platform.OS === 'ios' ? '500':'400'
                       }}>
                       {location}
@@ -53,7 +57,7 @@ const CartCard = ({name,location,handlePress,total,listing})=>{
                  <Text style={totalTextStyle}>Total:</Text>
                  <Text style={totalTextStyle}>{total+ ' Rwf'}</Text>
            </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -62,12 +66,14 @@ const styles = StyleSheet.create({
     wrapperStyle:{
         display:'flex',
         flex:1,
+        borderRadius:6,
         backgroundColor:colors.white,
-        borderWidth:Platform.OS === 'ios' ? 0.7 : 0.4,
-        borderColor:colors.gray,
-        // height:Platform.OS === 'ios' ? 250: 250,
-        marginTop:Platform.OS === 'ios' ? 7.5 : 5.5,
-        marginBottom:Platform.OS === 'ios' ? 7.5 :5.5
+        width:wp('90%'),
+        // borderWidth:0.7,
+        // borderColor:colors.gray,
+        // height:Platform.OS === 'ios' ?250 : 200,
+        marginTop:hp('0.6%'),
+        marginBottom:hp('0.6%'),
     },
     cardActionsWrapper:{
         display:'flex',
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
     },
     nameStyle:{
         color:colors.black01,
-        fontSize:Platform.OS === 'ios' ? 18 : 13,
+        fontSize:hp('2%'),
         fontWeight:Platform.OS === 'ios' ? '600' : '500'
     },
     actionButtonsStyle:{
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
         borderTopColor:colors.gray01
     },
     totalTextStyle:{
-            fontSize:Platform.OS === 'ios' ? 18 :15 ,
+            fontSize:hp('2%'),
             fontWeight:Platform.OS === 'ios' ? '600':'500',
             color:colors.black01,
             marginLeft:5,

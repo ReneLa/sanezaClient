@@ -1,9 +1,10 @@
-import {ADD,REMOVE,UPDATE,CHANGE_DATE} from '../actions/types'
+import {ADD,REMOVE,UPDATE,REFRESH_CART,CHANGE_DATE,SET_TIME} from '../actions/types'
 
 const initialState = {
   byId: [],
   byHash: [],
-  dateSelected:null
+  dateSelected:null,
+  timeSelected:null
 }
 
 
@@ -50,9 +51,18 @@ export default (state=initialState,action)=> {
     }
 
     case CHANGE_DATE:
+      const date=action.payload.toDateString()
+      const time=action.payload.toTimeString()
+      return {...state, dateSelected:date,timeSelected:time}
 
-        return {...state, dateSelected:action.payload}
+    case SET_TIME:
+      return {...state, time:action.payload}
     
+    case REFRESH_CART:
+         return{
+           byHash:[],byId:[],dateSelected:null,timeSelected:null
+         }  
+
     default: {
       return state
     }

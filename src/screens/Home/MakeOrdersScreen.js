@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {FontAwesome} from '@expo/vector-icons'
 
 import {connect} from 'react-redux';
-import {getShopProducts} from "../../redux/actions"
+import {getShopProducts,makeNewOrder,refreshCart} from "../../redux/actions"
 
 import { View,StyleSheet,Platform,
     ScrollView, Text} from 'react-native';   
@@ -12,6 +12,7 @@ import Button from '../../components/buttons/Button'
 import colors from '../../styles/colors'
 import ProductCard from'../../components/common/ProductCard'
 import ConfirmModal from '../../components/common/ConfirmModal'
+import {StackActions,NavigationActions} from 'react-navigation'
 
 const image1 = require('../../images/salon1.jpg')
 const image2 = require('../../images/salon2.jpg')
@@ -24,8 +25,10 @@ const image5 = require('../../images/salon5.jpg')
 
 class MakeOrdersScreen extends Component{
      
-    static navigationOptions=({navigation})=>({
-        title:"Saneza",
+    static navigationOptions=({navigation})=>{
+        const { params } = navigation.state
+        return {
+        title:params.shopName,
         headerLeft:<RoundedButton customStyle={{marginLeft:5,width:45,height:45}}
                                  handlePress={()=>{navigation.goBack()}} icon={<FontAwesome name="angle-left" size={35} color={colors.white}/>}/>,
         headerStyle:{
@@ -44,14 +47,13 @@ class MakeOrdersScreen extends Component{
              color:colors.white
         },
         gesturesEnables:false
-    })
+    }}
 
     constructor(props){
         super(props);
         this.state ={
             checked:false,
             loading:true,
-            items:[1,2,3],
             isOrdered:false
         }
     
@@ -62,6 +64,7 @@ class MakeOrdersScreen extends Component{
     componentDidMount(){
         const {branchId} = this.props.navigation.state.params
         this.props.getShopProducts(branchId);
+        this.props.refreshCart()
     }
 
     openModal(){
@@ -71,6 +74,14 @@ class MakeOrdersScreen extends Component{
     
    closeModal(){
      this.setState({isOrdered:false})
+   }
+
+   handleMakeOrder(){
+      const {byHash,makeNewOrder}=this.props
+
+      byHash.map(ord => 
+           makeNewOrder(ord)
+        )
    }
 
    renderCategory(){
@@ -96,7 +107,7 @@ class MakeOrdersScreen extends Component{
 }
 
 renderProducts(products){
-    
+    const {branchId} = this.props.navigation.state.params
          return(
             products.map(product =>{
                  return(
@@ -104,6 +115,7 @@ renderProducts(products){
                             key={product.productId}
                             id={product.productId}
                             item={product}
+                            branchId={branchId}
                             image={product.image}
                             name={product.productName}
                             quantity={product.stock}
@@ -114,17 +126,33 @@ renderProducts(products){
          )
      }
 
+
+
     onOrderConfirm(){
+        this.handleMakeOrder()
         this.closeModal();
-        const {navigate}=this.props.navigation
-         navigate('Completed')
+        const popAction = StackActions.pop({
+            n: 1,
+          });
+    this.props.navigation.dispatch(popAction);
     }
    
   render(){
-    //   console.log(this.props.shopProducts)
-            const itemQty = this.state.items.length;
-            const {selected,loading,items,isOrdered} =this.state
-            const showBottomNav = items.length > 0 ? true : false
+    const itemQty = this.props.byId.length;
+    const initialValue=0;
+    const sum = this.props.byHash.reduce(
+                   (total, currentValue) => {
+
+                    return total + currentValue.price
+
+                   },
+                   initialValue        
+                        
+            );
+            console.log(this.props.byHash)
+            
+            const {isOrdered} =this.state
+            const showBottomNav = itemQty > 0 ? true : false
             const visible= isOrdered? true: false
         return(
         <View style={styles.wrapper}>
@@ -144,34 +172,35 @@ renderProducts(products){
                  onClose={this.onOrderConfirm.bind(this)}
             />
             <BottomContainer 
-               showBottomNav={true}
+               showBottomNav={showBottomNav}
                textContainer={
                    <View style={{backgroundColor:'transparent',padding:15,alignItems:'center',justifyContent:'center'}}>
-                       <Text style={{
-                           fontSize:18,color:'#fff'}}> {'Products Selected: '+ itemQty} </Text>
-                       <Text style={{fontSize:25,color:'#fff',fontWeight:'bold'}}>{"2000 rwf"}</Text>
+                    <Text style={{fontSize:Platform.OS === 'ios' ? 18 : 16,color:'#fff'}}>{itemQty} Product(s) selected </Text>
+                    <Text style={{fontSize:Platform.OS === 'ios' ? 25: 20,color:'#fff',fontWeight:'bold'}} >{sum +' rwf'}</Text>
                    </View>}
                buttonTwo={<Button handlePress={this.openModal.bind(this)}
                label="Order Now"
                textSize={22}
+               
                textColor={colors.black01}
-               customStyle={{backgroundColor:colors.gray03,borderRadius:2}}/>}
-                   customStyle={{position:'absolute',height:75,backgroundColor:colors.primary,display:'flex',width:'100%',flex:1}}
-                   />   
+               customStyle={{backgroundColor:colors.gray03,borderRadius:2,display:'flex',width:'100%',flex:1}}/>}
+               customStyle={{position:'absolute',height:Platform.OS === 'ios' ? 75 : 65 ,backgroundColor:colors.primary}}
+               />   
           </View>
         )
        
     }
 }
 
-function mapStateToProps({shop}){
+function mapStateToProps({shop,cart}){
     const {error,loading,shopProducts} = shop
+    const {byHash,byId}=cart
     return {
-       error,loading, shopProducts
+       error,loading, shopProducts,byHash,byId
     }
 }
 
-export default connect(mapStateToProps,{getShopProducts})(MakeOrdersScreen)
+export default connect(mapStateToProps,{getShopProducts,makeNewOrder,refreshCart})(MakeOrdersScreen)
 
 const styles =StyleSheet.create({
     

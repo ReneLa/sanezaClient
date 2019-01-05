@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {getClientById} from "../redux/actions"
 // const AvatorImage = require('../images/icons/user.jpg')
 // const backgroundImage= require('../images/signup.jpg');
+const salonImage= require('../images/salon4.jpg')
 
 
 
@@ -18,17 +19,17 @@ class ProfileContainer extends Component{
         this.onEditPress=this.onEditPress.bind(this)
         this.trackOrders=this.trackOrders.bind(this)
         this.state={
-            
+            client:null
         }
         
     }
    
     componentDidMount= async()=>{
-        const clientId=4
-        // let myID= await AsyncStorage.getItem('auth_key')
-         
-        //  console.log(myID)
-        this.props.getClientById(clientId)
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+        // console.log(item)
+
+        this.props.getClientById(item.clientId)
     }
 
    
@@ -51,15 +52,18 @@ class ProfileContainer extends Component{
         // console.log(pend,data,orders)
         return(
             
-            <View style={styles.wrapper}>
-                <View style={styles.avatorImage}>
-                   {/* <Image source={client.propfilePicture}/> */}
-                </View>
-               
+            <View style={styles.wrapper}>   
              <View style={styles.card}>
-            
+             <View style={{display:'flex',
+                     alignItems:'center',
+                     justifyContent:'center'
+            }}>
+                <View style={styles.avatorImage}>
+                   <Image source={salonImage} style={{width:'100%',height:'100%'}}/>
+                </View>
+                </View>
                 <View styles={styles.cardContent}>
-                <RoundedButton icon={<FontAwesome name='edit' color='#fff' size={Platform.OS === 'ios' ? 30 : 25} />}
+                {/* <RoundedButton icon={<FontAwesome name='edit' color='#fff' size={Platform.OS === 'ios' ? 30 : 25} />}
                     handlePress={this.onEditPress}
                     customStyle={{backgroundColor:'#1F618D',
                     padding:5,alignItems:'center',zIndex:2,
@@ -71,7 +75,7 @@ class ProfileContainer extends Component{
                     shadowOffset: { height: 2},
                     shadowOpacity: 0.8,
                     shadowRadius: 5}}
-             />
+             /> */}
                   <View style={styles.nameWrapper}>
                     <Text style={styles.profileName}>
                     {data.firstName}
@@ -161,9 +165,10 @@ const styles =StyleSheet.create({
     wrapper:{
         display:'flex',
         flex:1,
-        paddingTop:Platform.OS === 'ios' ? 20 : 15,
+        // paddingTop:Platform.OS === 'ios' ? 20 : 15,
         alignItems:'center',
-        justifyContent:'center'  
+        justifyContent:'center',
+        backgroundColor:colors.primary 
     },
 
     headerText:{
@@ -173,13 +178,13 @@ const styles =StyleSheet.create({
         marginBottom:Platform.OS === 'ios' ? 10: 7,
     },
     avatorImage:{
-        width:Platform.OS === 'ios' ? 100: 80,
-        height:Platform.OS === 'ios' ? 100: 80,
-        marginBottom:Platform.OS === 'ios' ? 10 : 7,
-        borderRadius:Platform.OS === 'ios' ? 100 : 80,
-        backgroundColor:'#fff',
-        shadowColor: '#000000',
-        shadowOffset: { height: 2},
+        width:Platform.OS === 'ios' ? 130: 120,
+        height:Platform.OS === 'ios' ? 110: 100,
+        marginTop:10,
+        borderRadius:Platform.OS === 'ios' ? 5 : 5,
+        backgroundColor:colors.white,
+        shadowColor: colors.white,
+        shadowOffset: { height: 1},
         shadowOpacity: 0.5,
         shadowRadius:Platform.OS === 'ios' ?  5 : 4,
     },
@@ -191,19 +196,19 @@ const styles =StyleSheet.create({
     card:{
       display:'flex',
       flexDirection:'column',
-      borderWidth:1,
-      borderRadius:5,
-      borderColor:'#D6DBDF',
-      shadowColor: colors.gray02,
+    //   borderWidth:1,
+    //   borderRadius:5,
+      borderBottomColor:'#D6DBDF',
+      shadowColor: colors.primary,
       shadowOffset: { height: 2},
       shadowOpacity: 0.8,
       shadowRadius: 5,
-      marginLeft:Platform.OS === 'ios' ? 30: 20,
-      marginRight:Platform.OS === 'ios' ? 30: 20,
-      width:Platform.OS === 'ios' ? 350 : 300,
-      top:Platform.OS === 'ios' ? -50: -40,
+    //   marginLeft:Platform.OS === 'ios' ? 30: 20,
+    //   marginRight:Platform.OS === 'ios' ? 30: 20,
+      width:'100%',
+    //   top:Platform.OS === 'ios' ? -50: -40,
       zIndex:-1,
-      backgroundColor:'#fff'
+      backgroundColor:colors.primary
     },
     cardContent:{
      display:'flex',

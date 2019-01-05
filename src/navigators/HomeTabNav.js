@@ -3,6 +3,9 @@ import {Platform} from 'react-native'
 import { 
   createMaterialTopTabNavigator
 } from 'react-navigation';
+import { 
+  widthPercentageToDP as wp, heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 import colors from '../styles/colors'
 import AllShopsScreen from '../screens/Home/Tabs/AllShopsScreen'
 import SalonsScreen from '../screens/Home/Tabs/SalonsScreen'
@@ -17,12 +20,12 @@ const HomeTabNav = createMaterialTopTabNavigator ({
 {
     tabBarOptions: {
       style:{ 
-      
+        // marginTop:100, 
         backgroundColor:colors.gray01
       },
       inactiveTintColor:'#566573',
       labelStyle: {
-        fontSize: Platform.OS === 'ios' ? 15: 12,
+        fontSize:hp('2%'),
         fontWeight:Platform.OS === 'ios' ?'600' :'400'
       },
       activeTintColor: colors.primary,

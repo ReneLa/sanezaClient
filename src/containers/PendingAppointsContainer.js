@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,ScrollView,Text,StyleSheet,Platform} from 'react-native';
+import {View,ScrollView,Text,StyleSheet,Platform,AsyncStorage} from 'react-native';
 
 import {connect} from "react-redux";
 import {getPendingAppointments,deletePendingAppointment} from "../redux/actions"
@@ -20,10 +20,13 @@ class PendingAppointsContainer extends React.Component{
     
     }
 
-    componentDidMount(){
-        const id= 1
-        this.props.getPendingAppointments(id)
+    componentDidMount =async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+
+        this.props.getPendingAppointments(item.clientId)
     }
+
     onOpen(id){
         this.setState({isCancel:true,appointId:id})
     }
@@ -59,7 +62,6 @@ class PendingAppointsContainer extends React.Component{
         )
     }
     render(){
-        // console.log(this.props)
        const {wrapperStyle,scrollViewStyle}= styles
        const visible =this.state.isCancel ? true : false
         return(
@@ -84,9 +86,9 @@ class PendingAppointsContainer extends React.Component{
 
 
 function mapStateToProps({appoints}){
-    const {error,loading,pendingAppoints}=appoints
+    const {error,loading,pendingAppoints,success, createdAppoint}=appoints
     return {
-       error,loading, pendingAppoints
+       error,loading, pendingAppoints,success,createdAppoint
     }
 }
 

@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     marginBottom: 2,
-    fontSize: 14,
+    // fontSize: 14,
   },
   errorMessageContainer: {
     flexDirection: 'row',

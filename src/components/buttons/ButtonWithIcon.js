@@ -4,7 +4,9 @@ import {
      Text,StyleSheet, TouchableOpacity,Platform,
     } from 'react-native';
 import colors from '../../styles/colors'    
-
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 const ButtonWithIcon= ({handlePress,label,textColor,textSize,customStyle,icon, disabled})=>{
     const {buttonStyle,labelStyle}= styles
@@ -38,7 +40,7 @@ const styles=StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
-        height:Platform.OS === 'ios' ? 60 : 50,
+        height:hp('7.5%'),
         paddingLeft:5,
         paddingRight:5
     },

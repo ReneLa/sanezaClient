@@ -4,6 +4,10 @@ import {
   createBottomTabNavigator,
   createStackNavigator,
 } from 'react-navigation';
+import { 
+  widthPercentageToDP as wp, heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
+
 import {FontAwesome,EvilIcons,MaterialIcons,MaterialCommunityIcons} from '@expo/vector-icons'
 import colors from '../styles/colors'
 import HomeTabNav from './HomeTabNav'
@@ -24,7 +28,8 @@ const HomeTab=createStackNavigator({
 
    HomeContainer: {screen: HomeTabNav,
      navigationOptions:{
-      header: props=><HeaderSearch {...props}/>},
+      header: props=><HeaderSearch {...props}/>
+      },
              gesturesEnables:false
         },
     SingleShop:{ screen: SingleShop },
@@ -56,7 +61,7 @@ const OrdersTab=createStackNavigator(
     OrdersContainer:{ screen:OrdersTabs,
 
        navigationOptions:{
-        title:"Saneza",
+        title:"Orders",
         headerStyle:{
         backgroundColor:colors.primary,
         elevation:2,
@@ -96,7 +101,7 @@ const AppointmentsTab=createStackNavigator(
     ApointmentsContainer:{ screen:AppointsTabs,
 
        navigationOptions:{
-        title:"Saneza",
+        title:"Appointments",
         headerStyle:{
         backgroundColor:colors.primary,
         elevation:2,
@@ -153,14 +158,14 @@ const LoggedTabNavigator = createBottomTabNavigator(
       screen: HomeTab,
       navigationOptions:{
         tabBarLabel:'HOME',
-        tabBarIcon:({ tintColor })=>(<FontAwesome name='home' size={Platform.OS === 'ios' ? 30 : 25}  color={tintColor}/>),
+        tabBarIcon:({ tintColor })=>(<FontAwesome name='home' size={hp('3.8%')}  color={tintColor}/>),
       }
     } ,
     Orders: {
       screen: OrdersTab,
       navigationOptions:{
         tabBarLabel:'ORDERS',
-        tabBarIcon:({ tintColor })=>(<MaterialIcons name='playlist-add-check' size={Platform.OS === 'ios' ? 35 : 30} color={tintColor}/>)
+        tabBarIcon:({ tintColor })=>(<MaterialIcons name='playlist-add-check' size={hp('3.8%')} color={tintColor}/>)
       },
     },
 
@@ -168,7 +173,7 @@ const LoggedTabNavigator = createBottomTabNavigator(
       screen: AppointmentsTab,
       navigationOptions:{
         tabBarLabel:'APPOINTMENTS',
-        tabBarIcon:({ tintColor })=>(<MaterialIcons name='event-note' size={Platform.OS === 'ios' ? 28 : 27} color={tintColor}/>)
+        tabBarIcon:({ tintColor })=>(<MaterialIcons name='event-note' size={hp('3.8%')} color={tintColor}/>)
       },
     },
 
@@ -176,7 +181,7 @@ const LoggedTabNavigator = createBottomTabNavigator(
       screen:ProfileTab,
       navigationOptions:{
         tabBarLabel:'PROFILE',
-        tabBarIcon:({ tintColor })=>(<EvilIcons name="user" color={tintColor} size={Platform.OS === 'ios' ? 35 : 30}/>)
+        tabBarIcon:({ tintColor })=>(<EvilIcons name="user" color={tintColor} size={hp('4%')}/>)
       },
     },
   },
@@ -189,12 +194,16 @@ const LoggedTabNavigator = createBottomTabNavigator(
         // color:colors.black01
       },
       activeTintColor:colors.primary,
-      inactiveTintColor:colors.black01,
+      inactiveTintColor:colors.black02,
     },
 
     tabBarPosition:'bottom'
    
-  },
+  },{
+    initialRouteName: "Home"
+  }
 );
 
 export default  LoggedTabNavigator
+
+// props=><HeaderSearch {...props}/>

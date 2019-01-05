@@ -1,23 +1,14 @@
 //LOGIN ACTION TYPES
-export const USERNAME_CHANGED='username_changed';
-export const PASSWORD_CHANGED= 'password_changed'
+
 export const LOGIN_USER_SUCCESS = 'login_user_success'
 export const LOGIN_USER_FAIL='login_user_fail'
 export const LOGIN_USER = 'login_user'
 export default SAVE_USER='save_user'
 
 //Signup action types
-export const SIGNUP_USER='signup';
-export const FIRSTNAME_CHANGED= 'firstname_changed'
 export const SIGNUP_USER_SUCCESS = 'signup_user_success'
 export const SIGNUP_USER_FAIL='signup_user_fail'
-export const LASTNAME_CHANGED = 'lastname_changed'
-export const EMAIL_CHANGED = 'email_changed'
-export const PHONENUMBER_CHANGED = 'phonenumber_changed'
-export const SEX_CHANGED = 'sex_changed'
-export const DATEOFBIRTH_CHANGED = 'dateofbirth_changed'
-export const LOCATION_CHANGED = 'location_changed'
-export const STREETNAME_CHANGED = 'streetname_changed'
+export const VALUE_CHANGE='value_change'
 
 //client related types
 
@@ -42,7 +33,9 @@ export const FETCH_SERVICE_FAILED ='fetch_service_failed'
 
 export const FETCH_SHOP_PRODUCTS ='fetch_shop_products'
 export const FETCH_SHOP_PRODUCTS_FAILED = 'fetch_shop_products_failed'
-
+export const FETCH_PRODUCT ='fetch_product'
+export const FETCH_PRODUCT_FAILED = 'fetch_product_failed'
+export const REFRESH_SHOP='refresh_shop'
 //get pending order
 export const FETCH_PENDING_ORDERS='fetch_pending_orders'
 export const FETCH_PENDING_ORDERS_FAILED = 'fetch_pending_orders_failed'
@@ -50,6 +43,9 @@ export const FETCH_PENDING_ORDERS_FAILED = 'fetch_pending_orders_failed'
 //get completed order
 export const FETCH_COMPLETED_ORDERS='fetch_completed_orders'
 export const FETCH_COMPLETED_ORDERS_FAILED = 'fetch_completed_orders_failed'
+
+export const MAKE_ORDER='make_order'
+export const MAKE_ORDER_FAILED='make_order_failed'
 
 //delete order 
 export const DELETE_PENDING_ORDER= 'delete_pending_order'
@@ -59,6 +55,9 @@ export const DELETE_PENDING_ORDER_FAILED='delete_pending_order_failed'
 //appointment Types
 export const FETCH_PENDING_APPOINTMENTS='fetch_pending_appointments'
 export const FETCH_PENDING_APPOINTMENTS_FAILED = 'fetch_pending_appointments_failed'
+
+export const CREATE_APPOINTMENT='create_appointment'
+export const CREATE_APPOINTMENT_FAILED='create_appointment_failed'
 
 //get completed order
 export const FETCH_COMPLETED_APPOINTMENTS='fetch_completed_appointments'
@@ -96,4 +95,5 @@ export const ADD = 'add'
 export const REMOVE= 'remove'
 export const CHANGE_DATE='change_date'
 export const UPDATE='update'
-export const REFRESH='refresh'
+export const SET_TIME='set_time'
+export const REFRESH_CART='refresh_cart'

@@ -23,6 +23,6 @@ const styles =StyleSheet.create({
        flex:1,
        backgroundColor:colors.gray03,
        
-        paddingTop:Platform.OS === 'ios' ? 10 :7,
+        // paddingTop:Platform.OS === 'ios' ? 10 :7,
    }
 })

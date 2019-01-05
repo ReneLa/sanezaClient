@@ -6,6 +6,8 @@ import {
 import colors from '../../styles/colors'
 import ShopCard from '../common/ShopCard'
 
+const salonImage= require('../../images/salon4.jpg')
+const carImage= require('../../images/salon1.jpg')
 
 export default class ShopList extends React.Component{
     
@@ -26,7 +28,7 @@ export default class ShopList extends React.Component{
                         <View style={styles.singleContainer} key={index}>
                           <ShopCard title={salon.shopName} 
                             handlePress={this.ViewShop.bind(this,salon.branchId)}
-                            image={<Image source={salon.profilepicture} 
+                            image={<Image source={salonImage} 
                             style={{width:'100%',height:'100%',flex:1}}/>}
                             location={salon.streetname}
                             rating={' '+salon.rating +' +'}
@@ -48,7 +50,7 @@ export default class ShopList extends React.Component{
                         <View style={styles.singleContainer} key={index}>
                           <ShopCard title={carwash.shopName} 
                             handlePress={this.ViewShop.bind(this,carwash.branchId)}
-                            image={<Image source={carwash.profilepicture} 
+                            image={<Image source={carImage} 
                             style={{width:'100%',height:'100%',flex:1}}/>}
                             location={carwash.streetname}
                             rating={' '+carwash.rating +' +'}
@@ -65,19 +67,23 @@ export default class ShopList extends React.Component{
         return(
             <View style={wrapperStyle}>
                <View style={categoryWrapperStyle}> 
-                 <Text style={headerTextStyle}>Salons</Text>
-                 <ScrollView horizontal={true} 
+                 {/* <Text style={headerTextStyle}>Salons</Text> */}
+                 <ScrollView 
+                //  horizontal={true} 
                    contentContainerStyle={scrollViewStyle}
-                   showsHorizontalScrollIndicator={false}>  
+                //    showsHorizontalScrollIndicator={false}
+                   >  
                    {this.renderSalons()}
                </ScrollView>
                </View>
 
                <View style={categoryWrapperStyle}> 
-                 <Text style={headerTextStyle}>Carwashes</Text>
-                 <ScrollView horizontal={true} 
+                 {/* <Text style={headerTextStyle}>Carwashes</Text> */}
+                 <ScrollView 
+                //    horizontal={true} 
                    contentContainerStyle={scrollViewStyle}
-                   showsHorizontalScrollIndicator={false}>  
+                //    showsHorizontalScrollIndicator={false}
+                   >  
                    {this.renderCarwashes()}
                </ScrollView>
                </View>
@@ -90,13 +96,13 @@ const styles = StyleSheet.create({
     wrapperStyle:{
         display:'flex',
         flex:1,
-        backgroundColor:'transparent',
-        marginTop:10
+        backgroundColor:colors.gray03,
+        // marginTop:10
     },
-    scrollView:{
+    scrollViewStyle:{
         display:'flex',
         flex:1,
-        backgroundColor:colors.white,
+        backgroundColor:colors.gray,
         
     },
     headerTextStyle:{
@@ -106,11 +112,13 @@ const styles = StyleSheet.create({
         fontWeight:Platform.OS === 'ios' ? '700' : '500'
     },
     singleContainer:{
-        padding:10
+        padding:10,
+        alignItems:'center',
+        justifyContent:'center'
     },
     categoryWrapperStyle:{
         display:'flex',
-        backgroundColor:colors.white,
+        backgroundColor:colors.gray,
         borderBottomWidth:1,
         borderBottomColor:colors.gray03,
         paddingTop:10,

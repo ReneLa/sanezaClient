@@ -1,4 +1,5 @@
 import { ADD_TO_APPOINTMENTS, REMOVE_FROM_APPOINTMENTS, CHANGE_DATE, 
+         CREATE_APPOINTMENT,CREATE_APPOINTMENT_FAILED,
          FETCH_COMPLETED_APPOINTMENTS, FETCH_COMPLETED_APPOINTMENTS_FAILED,
          FETCH_PENDING_APPOINTMENTS,FETCH_PENDING_APPOINTMENTS_FAILED,
          DELETE_PENDING_APPOINTMENT,DELETE_PENDING_APPOINTMENT_FAILED
@@ -7,34 +8,33 @@ import { ADD_TO_APPOINTMENTS, REMOVE_FROM_APPOINTMENTS, CHANGE_DATE,
 
 const INITIAL_STATE= {
     appointments:[],
-    // dateSelected:new Date().toDateString(),
+    createdAppoint:{},
     pendingAppoints:[],
-    completedAppoints:[]
+    completedAppoints:[],
+    success:''
 }
 
 export default (state=INITIAL_STATE, action)=>{
 
     switch(action.type){
-        // case CHANGE_DATE:
-        //     return {...state, dateSelected:action.payload}
+       
 
         case ADD_TO_APPOINTMENTS:
-        console.log(action.payload)
+        // console.log(action.payload)
            return {...state, appointments:[action.payload]}
 
         case REMOVE_FROM_APPOINTMENTS:
-           console.log(action.payload)
+        //    console.log(action.payload)
 
            const newAppoints = state.appointments.filter((appoint) => appoint.serviceId!== action.payload.id);          
            return {...state, appointments: newAppoints }
-        //    let index = items.findIndex((item) => item.serviceId === action.payload.); 
-        //    return [
-        //      ...items.slice(0, index),
-        //      ...item.slice(index + 1)
-        //    ]
-           
+     
+        case CREATE_APPOINTMENT:
+             return {...state,createdAppoint:action.payload, success:'successfully created'}
 
-        
+        case CREATE_APPOINTMENT_FAILED:
+            return {...state,success:'cant create appoint'}
+
          //fetch pending orders
         case FETCH_COMPLETED_APPOINTMENTS :
              return{...state,completedAppoints:action.payload} 

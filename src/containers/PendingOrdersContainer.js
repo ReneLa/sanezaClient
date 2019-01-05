@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,ScrollView,Text,StyleSheet,Platform} from 'react-native';
+import {View,ScrollView,Text,StyleSheet,Platform,AsyncStorage} from 'react-native';
 
 import {connect} from "react-redux";
 import {getPendingOrders,deletePendingOrder} from "../redux/actions"
@@ -13,15 +13,50 @@ class PendingOrdersContainer extends React.Component{
         super(props);
         this.state ={
             orderId:'',
-            isCancel:false
+            isCancel:false,
+            ordersOrError:null,
+            client:''
         }
     
     }
 
-    componentDidMount(){
-        const id= 4
-        this.props.getPendingOrders(id)
+    componentDidMount = async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+        this.setState({client:item.clientId})
+        this.props.getPendingOrders(item.clientId)
     }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        // Store prevUserId in state so we can compare when props change.
+        // Clear out any previously-loaded user data (so we don't render stale stuff).
+        if (nextProps.pendingOrders !== prevState.pendingOrders) {
+          return {
+            pendingOrders: nextProps.pendingOrders,
+            ordersOrError: null,
+          };
+        }
+    
+        // No state update necessary
+        return null;
+      }
+    
+    //   componentDidMount() {
+    //     // It's preferable in most cases to wait until after mounting to load data.
+    //     // See below for a bit more context...
+    //     this._loadUserData();
+    //   }
+    
+    // componentDidUpdate = (prevProps, prevState)=> {
+    //     if (this.state.ordersOrError === null) {
+    //       // At this point, we're in the "commit" phase, so it's safe to load the new data.
+    //       this.props.getPendingOrders(this.state.client)
+    //     }
+       
+        
+    //   }
+
+
     onOpen(id){
         this.setState({isCancel:true})
     }
@@ -64,7 +99,11 @@ class PendingOrdersContainer extends React.Component{
              <ScrollView 
                  showsVerticalScrollIndicator={false}
                  contentContainerStyle={scrollViewStyle}>
-               <View>
+               <View style={{
+                    display:'flex',
+                    alignItems:'center',
+                    justifyContent:'center',
+               }}>
                    {this.renderShops()}
                </View>
             </ScrollView>
@@ -99,6 +138,8 @@ const styles=StyleSheet.create({
     },
     scrollViewStyles:{
         display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
         flex:1
     }
 })

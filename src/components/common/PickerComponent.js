@@ -27,7 +27,6 @@ export default PickerComponent
 
 const styles=StyleSheet.create({
     pickerStyle:{
-        
         bottom:0,
         left:0,
         flex: 0.5,

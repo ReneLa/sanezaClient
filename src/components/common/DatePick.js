@@ -1,17 +1,13 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {dateChanged,setTime} from '../redux/actions'
 import {View,Text,StyleSheet,
     DatePickerIOS,Animated,Easing,
         Modal,TouchableOpacity,
     } from'react-native'
 import {FontAwesome} from '@expo/vector-icons'
-import colors from '../styles/colors'
-import { 
-    widthPercentageToDP as wp, heightPercentageToDP as hp
-  } from 'react-native-responsive-screen';
+import colors from '../../styles/colors'
 
-class Calendar extends React.Component{
+
+class DatePick extends React.Component{
 
     constructor(props) {
         super(props);
@@ -43,8 +39,9 @@ class Calendar extends React.Component{
 
     
       setDate(newDate) {
+          const {prop, set}=this.props
           this.setState({chosenDate:newDate})
-          this.props.dateChanged(newDate)   
+          set({prop,newDate})   
       }
 
       closePicker(){
@@ -58,6 +55,7 @@ class Calendar extends React.Component{
        }=styles
     
     const today= new Date()
+
     return(
         <Modal 
            animationType={'slide'}
@@ -66,9 +64,7 @@ class Calendar extends React.Component{
            onRequestClose={close}
          >
             <View style={wrapperStyle}>
-              
-                     
-            
+    
                <Animated.View style={[container,{display:this.state.visible ? 'flex': 'none',transform:[{translateY:positionValue}]}]}>
                <View style={pickerHeaderStyle}>
                  <TouchableOpacity style={{justifyContent:'center',alignItems:'center'}} 
@@ -83,14 +79,13 @@ class Calendar extends React.Component{
                   </TouchableOpacity>
                 </View> 
                <DatePickerIOS
-                   mode={'datetime'}
-                   minimumDate={today}
-                   style={{width:'100%',height:hp('35%'),backgroundColor:colors.gray02}}
+                   mode={'date'}
+                   maximumDate={today}
+                   style={{width:'100%',height:300,backgroundColor:colors.gray02}}
                    date={this.state.chosenDate}
                    onDateChange={this.setDate}
                />       
                </Animated.View>
-          
             
             </View>
         </Modal>
@@ -111,6 +106,7 @@ const styles =StyleSheet.create({
         bottom:0,
         left:0,
         width:'100%',
+       
         // height:'auto',
        
         backgroundColor:colors.white,
@@ -130,7 +126,7 @@ const styles =StyleSheet.create({
        alignItems:'flex-end',
        justifyContent:'center',
         padding:10,
-        borderColor:colors.black01,
+        borderWidth:1,
         borderTopColor:colors.gray02,
         // borderTopWidth:1,
         // borderBottomColor:colors.gray,
@@ -146,4 +142,4 @@ function mapStateToProps({cart}){
     }
 }
 
-export default connect(mapStateToProps,{dateChanged,setTime})(Calendar)
+export default DatePick

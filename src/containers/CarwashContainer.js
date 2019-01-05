@@ -5,6 +5,7 @@ import {Platform,AsyncStorage} from 'react-native'
 import {getAllShops} from "../redux/actions"
 import FlatList from  '../components/home/FLatList'
 
+const carImage= require('../images/salon1.jpg')
 import {
     View,StyleSheet,Text,ScrollView
 } from 'react-native'
@@ -41,7 +42,7 @@ class CarwashContainer extends React.Component{
                         <View style={styles.singleContainer} key={index}>
                           <FlatList handlePress={this.viewShop.bind(this,carwash.branchId)}
                                     title={carwash.shopName}
-                                    image={carwash.profilePicture}
+                                    image={carImage}
                                     location={carwash.streetname}
                            />
                        </View>

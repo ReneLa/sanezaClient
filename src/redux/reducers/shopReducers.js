@@ -3,11 +3,13 @@ import {
     FETCH_SINGLE_SHOP, FETCH_SHOP_FAILED,
 
     FETCH_SHOP_SERVICES,FETCH_SHOP_SERVICES_FAILED,
-
-    FETCH_SHOP_PRODUCTS,FETCH_SHOP_PRODUCTS_FAILED,
     FETCH_SERVICE,FETCH_SERVICE_FAILED,
 
-    REFRESH
+    FETCH_SHOP_PRODUCTS,FETCH_SHOP_PRODUCTS_FAILED,
+    FETCH_PRODUCT,FETCH_PRODUCT_FAILED,
+
+
+    REFRESH_SHOP
 
 } from '../actions/types'
 
@@ -16,6 +18,7 @@ const INITIAL_STATE={
     shopProducts:[],
     shopServices:[],
     service:{},
+    product:{},
     singleShop:'',
     error:'',
     loading:false,
@@ -25,8 +28,13 @@ const INITIAL_STATE={
 export default (state=INITIAL_STATE,action)=> {
 
     switch(action.type){
-        case REFRESH:
-          return {...state,[action.payload.prop]:''}
+        case REFRESH_SHOP:
+          return {...state,
+                shopProducts:[],
+                shopServices:[],
+                service:'',product:{},
+                singleShop:{},error:''
+        }
           
         case FETCH_ALL_SHOPS:
             return{...state, shops:action.payload}
@@ -59,6 +67,12 @@ export default (state=INITIAL_STATE,action)=> {
             
         case FETCH_SHOP_PRODUCTS_FAILED :
            return {...state, error:'cant fetch these shopproducts'}
+
+        case FETCH_PRODUCT:
+           return{...state,product:action.payload} 
+           
+        case FETCH_PRODUCT_FAILED :
+          return {...state, error:'cant fetch this product'}   
 
         default:
         

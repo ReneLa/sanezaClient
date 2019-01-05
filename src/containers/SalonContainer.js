@@ -4,6 +4,7 @@ import {Platform}from 'react-native'
 import {connect} from 'react-redux';
 import {getAllShops} from "../redux/actions"
 import FlatList from  '../components/home/FLatList'
+const salonImage= require('../images/salon4.jpg')
 
 import {
     View,StyleSheet,Text,ScrollView
@@ -37,7 +38,7 @@ class SalonContainer extends React.Component{
                         <View style={styles.singleContainer} key={index}>
                           <FlatList handlePress={this.viewShop.bind(this,salon.branchId)}
                                     title={salon.shopName}
-                                    image={salon.profilePicture}
+                                    image={salonImage}
                                     location={salon.streetname}
                            />
                        </View>

@@ -7,6 +7,7 @@ import LoginScreen from '../screens/AuthScreens/LoginScreen';
 import SignupScreen from '../screens/AuthScreens/SignupScreen'
 import LoggedTabNavigator from './LoggedTabNavigator';
 import ForgotPasswordScreen from '../screens/AuthScreens/ForgotPasswordScreen'
+import FinalSignUp from "../screens/AuthScreens/FinalSignUp";
 
 export const SignedOut = createStackNavigator({
     LoginScreen: { screen: LoginScreen,
@@ -17,14 +18,20 @@ export const SignedOut = createStackNavigator({
     } },
     ForgotPassword:{screen:ForgotPasswordScreen,
         navigationOptions:{
-            header:null,
-            
+            // header:null,
+            gesturesEnabled:true
     
         } },
     Signup: { screen: SignupScreen,
         navigationOptions:{
-            header:null,
-            gesturesEnabled:false
+            // header:null,
+            gesturesEnabled:true
+        }
+     },
+    Register: { screen: FinalSignUp,
+        navigationOptions:{
+            // header:null,
+            gesturesEnabled:true
         }
      },
 });

@@ -3,7 +3,9 @@ import {FontAwesome,MaterialCommunityIcons,Ionicons,EvilIcons} from '@expo/vecto
 import {View,Text,StyleSheet,TouchableOpacity,Platform} from 'react-native'
 import colors from '../styles/colors'
 import RoundedButton from '../components/buttons/RoundedButton'
-
+import { 
+    widthPercentageToDP as wp, heightPercentageToDP as hp
+  } from 'react-native-responsive-screen';
 
 export default class HeaderSearch extends React.Component{
 
@@ -18,7 +20,7 @@ export default class HeaderSearch extends React.Component{
         }=styles
         return(
             <View style={wrapper}>
-              <View style={headerContainer}>
+              {/* <View style={headerContainer}>
                  <View style={leftButtonWrapper}>
                      <RoundedButton 
                         // handlePress={this.props.navigation.navigate('ProfileContainer')}
@@ -37,10 +39,12 @@ export default class HeaderSearch extends React.Component{
                         <MaterialCommunityIcons name="map-marker-radius" color='#fff' size={Platform.OS === 'ios' ? 30 : 25}/>}
                      />
                  </View>
-              </View>
+              </View> */}
+             
+             
               <View style={searchFieldWrapper}>
                  <TouchableOpacity onPress={this.openSearch.bind(this)} style={searchField}>
-                   <Ionicons name="ios-search" size={25} color={colors.blue01} style={{fontWeight:'500'}}/>
+                   <Ionicons name="ios-search" size={hp('2.9%')} color={colors.blue01} style={{fontWeight:'500'}}/>
                    <Text style={searchTextStyle}>Search by name or location </Text>
                  </TouchableOpacity>
               </View>
@@ -54,8 +58,9 @@ export default class HeaderSearch extends React.Component{
 const styles = StyleSheet.create({
     wrapper:{
         display:'flex',
-        backgroundColor:colors.white,
-        height: 120,
+        backgroundColor:colors.primary,  //change back to white
+        height:hp('10%'),  //change here to 120
+        paddingTop:hp('3%'),  //add please remove 
         
     },
     headerContainer:{
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
         paddingBottom:10,
         paddingLeft:10,
         paddingRight:10,
-        height:Platform.OS === 'ios' ? 65 :60,
+        height:hp('6.3%'),
         backgroundColor:colors.primary
     },
     leftButtonWrapper:{
@@ -83,7 +88,7 @@ const styles = StyleSheet.create({
     titleStyle:{
         color:colors.white,
         fontWeight:Platform.OS === 'ios' ?'700' :'500',
-        fontSize:Platform.OS === 'ios' ? 20 : 16
+        fontSize:hp('1.9%')
     },
     rightButtonWrapper:{
         display:'flex',
@@ -101,18 +106,18 @@ const styles = StyleSheet.create({
         display:'flex',
         flexDirection:'row',
         justifyContent:'center',
-        height:40,
-        borderRadius:3,
-        borderColor:colors.gray01,
+        height:hp('5%'),
+        borderRadius:2,
+        borderColor:colors.gray02,
         borderWidth:0.7,
-        backgroundColor:colors.gray02,
+        backgroundColor:colors.white,
         paddingTop:10,
         
         
     },
     searchTextStyle:{
         color:colors.blue01,
-        fontSize:Platform.OS === 'ios' ? 18 : 14,
+        fontSize:hp('2.4%'),
         marginLeft:15
     }
 })

@@ -3,7 +3,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {getCompletedAppointments} from "../redux/actions"
 
-import {View,ScrollView,Text,StyleSheet,Platform} from 'react-native';
+import {View,ScrollView,Text,StyleSheet,Platform,AsyncStorage} from 'react-native';
 import AppointCard from '../components/appoints/AppointCard'
 import colors from '../styles/colors'
 
@@ -11,9 +11,10 @@ import colors from '../styles/colors'
  class CompletedAppointsContainer extends React.Component{
     
 
-    componentDidMount(){
-        const id= 1
-        this.props.getCompletedAppointments(id)
+    componentDidMount=async()=>{
+        const retrievedItem =  await AsyncStorage.getItem("client");
+        const item = JSON.parse(retrievedItem);
+        this.props.getCompletedAppointments(item.clientId)
     }
     renderShops(){
         const {completedAppoints} = this.props

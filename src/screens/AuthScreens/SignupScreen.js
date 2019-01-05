@@ -2,95 +2,42 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {FontAwesome,Entypo} from '@expo/vector-icons'
 import { 
-   View, StyleSheet, Text,TouchableOpacity,
+   View, StyleSheet, Text,TouchableOpacity,Platform,
   KeyboardAvoidingView,ScrollView,ImageBackground,
-  Picker
  } from 'react-native';
 
 import colors from '../../styles/colors'
 const loginBackground =require('../../images/loginPaper.jpg');
 import {InputField} from '../../components/forms/InputField'
-import {LoginButton} from '../../components/buttons/LoginButton'
-import {
-       emailChanged,passwordChanged,locationChanged,streetnameChanged,
-       usernameChanged,firstnameChanged,lastnameChanged,phonenumberChanged,
-       sexChanged,dateofbirthChanged,signupUser
+import RoundedButton from '../../components/buttons/RoundedButton'
+
+import {onValueChange,signupUser
       } from '../../redux/actions'
-
-
-
+import { 
+        widthPercentageToDP as wp, heightPercentageToDP as hp
+      } from 'react-native-responsive-screen';
 
 class SignupScreen extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            
-        }
-    }
-
-    onFirstnameChange(text){
-        this.props.firstnameChanged(text)
-      }
-    onLastnameChange(text){
-        this.props.lastnameChanged(text)
-      }  
-    onUsernameChange(text){
-        this.props.usernameChanged(text)
-      }  
-    onEmailChange(text){
-      this.props.emailChanged(text)
-    }
-
-    onPasswordChange(text){
-      this.props.passwordChanged(text)
-    }
-
-    onPhonenumberChange(text){
-        this.props.phonenumberChanged(text)
-      }
-    onSexChange(text){
-        this.props.sexChanged(text)
-      }
-    onBirthDateChange(text){
-        this.props.dateofbirthChanged(text)
-      } 
-    onLocationChange(text){
-        this.props.locationChanged(text)
-      } 
-      
-    onStreetnameChange(text){
-        this.props.streetnameChanged(text)
-      }  
-      onSignInPress=()=>{
-        this.props.navigation.navigate('LoginScreen')
-      }
-    onSignupPress(){
-      const {
-            firstname,lastname, email,location,phonenumber,
-             password,username,sex,streetname,dateofbirth, signupUser} =this.props
-
-      signupUser({
-        location,streetname,phonenumber,username,
-        firstname,lastname,dateofbirth,sex,password,email})
-    }
-
+  static navigationOptions=({navigation})=>({
+   
+    headerLeft:<RoundedButton customStyle={{marginLeft:5,width:45,height:45}}
+                             handlePress={()=>{navigation.goBack()}} 
+                             icon={<FontAwesome name="angle-left" 
+                                         size={Platform.OS === 'ios' ? 35 : 30} color={colors.white}/>}/>,
+    headerTransparent:true,
+})
   
-    renderError(){
-      if(this.props.error){
-        return(
-          <View style={{display:"flex", backgroundColor:"#fff"}}>
-            <Text style={{ color:"red",fontSize:25,}}>{this.props.error}</Text>
-          </View>
-        )
-      }
-    }
+ 
+  onNextPress=()=>{
+    this.props.navigation.navigate('Register')
+  }    
 
   render(){
         const {imageWrapper,wrapper,scrollView,headerWrapper,
                loginHeader,underline,optionsButtons,cardContainer,cardContent,
                forgotPasswordText,signUpText}=styles
 
-      
+      const {onValueChange}=this.props
     return(
       <ImageBackground source={loginBackground}  
                        style={imageWrapper}>
@@ -106,26 +53,26 @@ class SignupScreen extends React.Component{
                   <View style={underline}/>
                 </View>  
 
-                
+               <View style={{display:'flex',justifyContent:'center',marginTop:60}}>
                 <View style={cardContainer}>
                 <View style={[{paddingRight:3},cardContent]}>
                    <InputField  
-                    placeholder={"First Name"}
+                    label="First Name"
                     value={this.props.firstname}
-                    onChangeText={this.onFirstnameChange.bind(this)}  
+                    onChangeText={value=>onValueChange({prop:'firstname',value})}  
                     textColor={colors.black01}
                     customStyle={{
                       alignItems:'left',backgroundColor:colors.gray01,
-                      marginBottom:10,marginTop:10,borderRadius:4
+                     marginBottom:10,marginTop:10,borderRadius:4
                     }}
                    />
                  </View>
                  <View style={[{paddingLeft:3},cardContent]}>
                    <InputField  
-                    placeholder={"Last Name"}
+                    label={"Last Name"}
                     value={this.props.lastname}
                     textColor={colors.black01}
-                    onChangeText={this.onLastnameChange.bind(this)}  
+                    onChangeText={value=>onValueChange({prop:'lastname',value})} 
                     customStyle={{
                       alignItems:'left',marginBottom:10,backgroundColor:colors.gray01,
                       marginTop:10,borderRadius:4
@@ -135,22 +82,21 @@ class SignupScreen extends React.Component{
                 </View>
                 
                 <InputField  
-                    placeholder={"User Name"}
+                    label={"User Name"}
                     value={this.props.username}
                     textColor={colors.black01}
-                    onChangeText={this.onUsernameChange.bind(this)}  
-                    // label={"User Name"}
+                    onChangeText={value=>onValueChange({prop:'username',value})}  
+                    
                     customStyle={{
                       alignItems:'center',marginBottom:10,
                       marginTop:10,borderRadius:4, backgroundColor:colors.gray01
                     }}
                     /> 
                 <InputField  
-                    placeholder={"E-mail"}
+                    label={"E-mail"}
                     value={this.props.email}
                     textColor={colors.black01}
-                    onChangeText={this.onEmailChange.bind(this)}  
-                    // label={"E-mail"}
+                    onChangeText={value=>onValueChange({prop:'email',value})} 
                     customStyle={{
                       marginBottom:10,marginTop:10,
                       backgroundColor:colors.gray01,
@@ -160,11 +106,10 @@ class SignupScreen extends React.Component{
 
                 <InputField  
                     secureTextEntry
-                    placeholder={"Password"}
-                    value={this.state.password}
+                    label={"Password"}
+                    value={this.props.password}
                     textColor={colors.black01}
-                    onChangeText={this.onPasswordChange.bind(this)}  
-                    // label={"Password"}
+                    onChangeText={value=>onValueChange({prop:'password',value})}  
                     customStyle={{
                       marginBottom:10,marginTop:10,
                       backgroundColor:colors.gray01,
@@ -172,93 +117,31 @@ class SignupScreen extends React.Component{
                     }}
                 /> 
 
-                <InputField  
-                    placeholder={"Tel Number"}
-                    value={this.props.phonenumber}
-                    textColor={colors.black01}
-                    onChangeText={this.onPhonenumberChange.bind(this)}  
-                    // label={"Tel Number"}
-                    customStyle={{
-                      marginBottom:10,marginTop:10,
-                      backgroundColor:colors.gray01,
-                      borderRadius:4
-                    }}
-                    /> 
-  
-                <View style={cardContainer}>
-                 <View style={[{paddingRight:3},cardContent]}>
-                  <InputField  
-                    placeholder={"Sex"}
-                    value={this.props.sex}
-                    textColor={colors.black01}
-                    onChangeText={this.onSexChange.bind(this)}  
-                    // label={"Sex"}
-                    customStyle={{
-                      marginBottom:10,marginTop:10,
-                      backgroundColor:colors.gray01,
-                      borderRadius:4
-                    }}
-                    />  
-                 </View> 
-                 <View style={[{paddingLeft:3},cardContent]}>
-                  <InputField  
-                    placeholder={"Date-Of-Birth"}
-                    value={this.props.dateofbirth}
-                    textColor={colors.black01}
-                    onChangeText={this.onBirthDateChange.bind(this)}  
-                    // label={"Date-Of-Birth"}
-                    customStyle={{
-                      marginBottom:10,marginTop:10,
-                      backgroundColor:colors.gray01,
-                      borderRadius:4
-                    }}
-                    />  
-                 </View> 
-                </View>
+                   <View style={{
+                     display:'flex',
+                    //  width:'100%',
+                     padding:10,
+                     marginTop:30,
+                     alignItems:'center',
+                     justifyContent:'center'
+                   }}>
+                      <TouchableOpacity 
+                      onPress={this.onNextPress}
+                         style={{
+                           display:'flex',
+                           height:hp('9%'),
+                           width:wp('15%'),
+                           borderRadius:65,
+                           backgroundColor:colors.white,
+                           alignItems:'center',
+                           justifyContent:'center'
+                         }}
+                      >
+                         <FontAwesome name={'angle-right'} size={hp('7%')} color={colors.primary}/>
+                      </TouchableOpacity>
+                   </View>
 
-                 {/* <View style={cardContainer}>
-                 <View style={[{paddingRight:3},cardContent]}>
-                   <InputField  
-                    placeholder={"Location"}
-                    value={this.props.location}
-                    onChangeText={this.onLocationChange.bind(this)}  
-                    // label={"Location"}
-                    customStyle={{marginBottom:10,marginTop:10}}
-                    /> 
-                 </View>
-                 <View style={[{paddingLeft:3},cardContent]}>
-                   <InputField  
-                    placeholder={"Street Name"}
-                    value={this.props.streetname}
-                    onChangeText={this.onStreetnameChange.bind(this)}  
-                    // label={"Street Name"}
-                    customStyle={{marginBottom:10,marginTop:10}}
-                    />  
-                  </View> 
-                </View> */}
-                  
-                  {this.renderError()}
-
-                 <LoginButton 
-                     label={this.props.loading ? 'Am Loading' : 'SignUp'}
-                      handlePress={this.onSignupPress.bind(this)}
-                 />
-
-                   <View style={optionsButtons}>
-                        
-                           <Text style={forgotPasswordText}>
-                             Already Have account
-                           </Text>
-                         
-                         <TouchableOpacity 
-                         style={{alignSelf:'flex-end'}}
-                         onPress={this.onSignInPress}
-                         >
-                           <Text style={signUpText}>
-                             Sign In
-                           </Text>
-                         </TouchableOpacity>
-                    </View>
+                    </View> 
                 </ScrollView>
            
            </KeyboardAvoidingView>
@@ -279,10 +162,7 @@ const mapStateToProps =({auth}) =>{
 
 
 export default connect(mapStateToProps,{
-          emailChanged,passwordChanged,locationChanged,
-          streetnameChanged,usernameChanged,firstnameChanged,
-          lastnameChanged,sexChanged,dateofbirthChanged,
-          phonenumberChanged,signupUser
+           onValueChange,signupUser
         })(SignupScreen)
 
 const styles =StyleSheet.create({
@@ -297,28 +177,36 @@ const styles =StyleSheet.create({
   
   },
   scrollView:{
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
     paddingLeft:10,
     paddingRight:10,
     paddingTop:30,
     flex:1,
   },
   headerWrapper:{
+    display:'flex',
     alignItems:'center',
     justifyContent:'center',
-    marginTop:40,
-    marginBottom:30,
-  } ,
+    width:'100%',
+    marginTop:20,
+    marginBottom:20,
+  },
+  
   loginHeader:{
-    fontSize:50,
+    fontSize:hp('7%'),
     color:colors.white,
     fontWeight:'400',
     marginBottom:10,
   },
   underline:{
-    borderWidth:4,
-    width:'25%',
+    display:'flex', 
+    borderWidth:hp('0.3%'),
+    width:wp('30%'),
     borderColor:colors.white,
   },
+
   cardContainer:{
      display:'flex',
      flexDirection:'row',
@@ -328,27 +216,6 @@ const styles =StyleSheet.create({
     display:'flex',
     width:'50%',  
   },
-  optionsButtons:{
-    display:'flex', 
-    flexDirection:'row',
-    justifyContent: 'space-between',
-    marginLeft:20,
-    marginRight:20,
-    marginTop:30
-  },
-  forgotPasswordText:{
-    color:colors.white,
-    fontSize:23,
-    fontWeight:'200',
-    
-    },
-
-    signUpText:{
-      fontSize:23,
-      color:colors.white,
-      fontWeight:'600',
-     
-    }
 
 })
 
